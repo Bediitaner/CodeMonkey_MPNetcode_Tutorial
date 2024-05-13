@@ -1,23 +1,51 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class StoveCounterVisual : MonoBehaviour {
+namespace Counters
+{
+    public class StoveCounterVisual : MonoBehaviour
+    {
+        #region Contents
 
+        [SerializeField] private StoveCounter stoveCounter;
+        [SerializeField] private GameObject stoveOnGameObject;
+        [SerializeField] private GameObject particlesGameObject;
 
-    [SerializeField] private StoveCounter stoveCounter;
-    [SerializeField] private GameObject stoveOnGameObject;
-    [SerializeField] private GameObject particlesGameObject;
+        #endregion
 
+        
+        #region Unity: Start
 
-    private void Start() {
-        stoveCounter.OnStateChanged += StoveCounter_OnStateChanged;
+        private void Start()
+        {
+            AddEvents();
+        }
+
+        #endregion
+
+        
+        #region Event: OnStateChanged
+
+        private void OnStateChanged(object sender, StoveCounter.OnStateChangedEventArgs e)
+        {
+            bool showVisual = e.state == State.Frying || e.state == State.Fried;
+            stoveOnGameObject.SetActive(showVisual);
+            particlesGameObject.SetActive(showVisual);
+        }
+
+        #endregion
+
+        #region Events: Add | Remove
+
+        private void AddEvents()
+        {
+            stoveCounter.OnStateChanged += OnStateChanged;
+        }
+
+        private void RemoveEvents()
+        {
+            stoveCounter.OnStateChanged -= OnStateChanged;
+        }
+
+        #endregion
     }
-
-    private void StoveCounter_OnStateChanged(object sender, StoveCounter.OnStateChangedEventArgs e) {
-        bool showVisual = e.state == StoveCounter.State.Frying || e.state == StoveCounter.State.Fried;
-        stoveOnGameObject.SetActive(showVisual);
-        particlesGameObject.SetActive(showVisual);
-    }
-
 }

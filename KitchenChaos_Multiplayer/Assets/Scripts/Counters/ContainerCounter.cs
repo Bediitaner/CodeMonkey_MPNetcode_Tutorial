@@ -1,37 +1,57 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class ContainerCounter : BaseCounter
+namespace Counters
 {
-    public event EventHandler OnPlayerGrabbedObject;
-
-
-    [SerializeField] private KitchenObjectSO kitchenObjectSO;
-
-
-    public override void Interact(Player player)
+    public class ContainerCounter : BaseCounter
     {
-        if (!player.HasKitchenObject())
+        #region Events
+
+        public event EventHandler OnPlayerGrabbedObject;
+
+        #endregion
+
+
+        #region Contents
+
+        [SerializeField] private KitchenObjectSO kitchenObjectSO;
+
+        #endregion
+
+        
+        #region Override: Interact
+
+        public override void Interact(Player player)
         {
-            // Player is not carrying anything
-            KitchenObject.SpawnKitchenObject(kitchenObjectSO, player);
-            InteractLogicServerRpc();
+            if (!player.HasKitchenObject())
+            {
+                // Player is not carrying anything
+                KitchenObject.SpawnKitchenObject(kitchenObjectSO, player);
+                InteractLogicServerRpc();
+            }
         }
-    }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void InteractLogicServerRpc()
-    {
-        InteractLogicClientRpc();
-    }
+        #endregion
 
-    [ClientRpc]
-    private void InteractLogicClientRpc()
-    {
-        OnPlayerGrabbedObject?.Invoke(this, EventArgs.Empty);
+        #region ServerRpc: InteractLogic
+
+        [ServerRpc(RequireOwnership = false)]
+        private void InteractLogicServerRpc()
+        {
+            InteractLogicClientRpc();
+        }
+
+        #endregion
+
+        #region ClientRpc: InteractLogic
+
+        [ClientRpc]
+        private void InteractLogicClientRpc()
+        {
+            OnPlayerGrabbedObject?.Invoke(this, EventArgs.Empty);
+        }
+
+        #endregion
     }
-    
 }

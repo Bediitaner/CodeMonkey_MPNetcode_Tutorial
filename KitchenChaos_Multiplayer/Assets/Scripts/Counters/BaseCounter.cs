@@ -1,60 +1,117 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class BaseCounter : NetworkBehaviour, IKitchenObjectParent {
-
-
-    public static event EventHandler OnAnyObjectPlacedHere;
-
-    public static void ResetStaticData() {
-        OnAnyObjectPlacedHere = null;
-    }
-
-
-    [SerializeField] private Transform counterTopPoint;
-
-
-    private KitchenObject kitchenObject;
-
-
-    public virtual void Interact(Player player) {
-        Debug.LogError("BaseCounter.Interact();");
-    }
-
-    public virtual void InteractAlternate(Player player) {
-        //Debug.LogError("BaseCounter.InteractAlternate();");
-    }
-
-
-    public Transform GetKitchenObjectFollowTransform() {
-        return counterTopPoint;
-    }
-
-    public void SetKitchenObject(KitchenObject kitchenObject) {
-        this.kitchenObject = kitchenObject;
-
-        if (kitchenObject != null) {
-            OnAnyObjectPlacedHere?.Invoke(this, EventArgs.Empty);
-        }
-    }
-
-    public KitchenObject GetKitchenObject() {
-        return kitchenObject;
-    }
-
-    public void ClearKitchenObject() {
-        kitchenObject = null;
-    }
-
-    public bool HasKitchenObject() {
-        return kitchenObject != null;
-    }
-
-    public NetworkObject GetNetworkObject()
+namespace Counters
+{
+    public class BaseCounter : NetworkBehaviour, IKitchenObjectParent
     {
-        return NetworkObject;
+        #region Events
+
+        public static event EventHandler OnAnyObjectPlacedHere;
+
+        #endregion
+
+        #region Contents
+
+        [SerializeField] private Transform counterTopPoint;
+
+        #endregion
+
+        #region Fields
+
+        private KitchenObject kitchenObject;
+
+        #endregion
+
+
+        #region Reset: StaticData
+
+        public static void ResetStaticData()
+        {
+            OnAnyObjectPlacedHere = null;
+        }
+
+        #endregion
+
+
+        #region Interact
+
+        public virtual void Interact(Player player)
+        {
+            Debug.LogError("BaseCounter.Interact();");
+        }
+
+        #endregion
+
+        #region Interact: Alternate
+
+        public virtual void InteractAlternate(Player player)
+        {
+            //Debug.LogError("BaseCounter.InteractAlternate();");
+        }
+
+        #endregion
+
+
+        #region KitchenObject: GetFollowTransform
+
+        public Transform GetKitchenObjectFollowTransform()
+        {
+            return counterTopPoint;
+        }
+
+        #endregion
+
+        #region KitchenObject: Set
+
+        public void SetKitchenObject(KitchenObject kitchenObject)
+        {
+            this.kitchenObject = kitchenObject;
+
+            if (kitchenObject != null)
+            {
+                OnAnyObjectPlacedHere?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        #endregion
+
+        #region KitchenObject: Get
+
+        public KitchenObject GetKitchenObject()
+        {
+            return kitchenObject;
+        }
+
+        #endregion
+
+        #region KitchenObject: Clear
+
+        public void ClearKitchenObject()
+        {
+            kitchenObject = null;
+        }
+
+        #endregion
+
+        #region KitchenObject: Has
+
+        public bool HasKitchenObject()
+        {
+            return kitchenObject != null;
+        }
+
+        #endregion
+
+
+        #region Get: NetworkObject
+
+        public NetworkObject GetNetworkObject()
+        {
+            return NetworkObject;
+        }
+
+        #endregion
     }
 }

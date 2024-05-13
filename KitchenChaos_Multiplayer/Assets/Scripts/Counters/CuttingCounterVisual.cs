@@ -1,29 +1,59 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
-public class CuttingCounterVisual : MonoBehaviour {
+namespace Counters
+{
+    public class CuttingCounterVisual : MonoBehaviour
+    {
+        #region Contents
 
+        [SerializeField] private CuttingCounter cuttingCounter;
 
-    private const string CUT = "Cut";
+        #endregion
 
+        #region Fields
 
-    [SerializeField] private CuttingCounter cuttingCounter;
+        private Animator animator;
 
+        private const string CUT = "Cut";
 
-    private Animator animator;
+        #endregion
 
+        #region Unity: Awake | Start
 
-    private void Awake() {
-        animator = GetComponent<Animator>();
+        private void Awake()
+        {
+            animator = GetComponent<Animator>();
+        }
+
+        private void Start()
+        {
+        }
+
+        #endregion
+
+        
+        #region Event: OnCut
+
+        private void OnCut(object sender, EventArgs e)
+        {
+            animator.SetTrigger(CUT);
+        }
+
+        #endregion
+
+        #region Events: Add | Remove
+
+        private void AddEvents()
+        {
+            cuttingCounter.OnCut += OnCut;
+        }
+        
+        private void RemoveEvents()
+        {
+            cuttingCounter.OnCut -= OnCut;
+        }
+
+        #endregion
     }
-
-    private void Start() {
-        cuttingCounter.OnCut += CuttingCounter_OnCut;
-    }
-
-    private void CuttingCounter_OnCut(object sender, System.EventArgs e) {
-        animator.SetTrigger(CUT);
-    }
-
 }

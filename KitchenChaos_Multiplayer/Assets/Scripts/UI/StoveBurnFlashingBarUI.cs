@@ -1,34 +1,66 @@
-using System.Collections;
-using System.Collections.Generic;
+using Counters;
 using UnityEngine;
 
-public class StoveBurnFlashingBarUI : MonoBehaviour {
+namespace UI
+{
+    public class StoveBurnFlashingBarUI : MonoBehaviour
+    {
+        #region Contents
+
+        [SerializeField] private StoveCounter stoveCounter;
+
+        #endregion
+
+        #region Fields
+
+        private Animator animator;
+
+        private const string IS_FLASHING = "IsFlashing";
+
+        #endregion
 
 
-    private const string IS_FLASHING = "IsFlashing";
+        #region Unity: Awake | Start
 
+        private void Awake()
+        {
+            animator = GetComponent<Animator>();
+        }
 
-    [SerializeField] private StoveCounter stoveCounter;
+        private void Start()
+        {
+            AddEvents();
 
+            animator.SetBool(IS_FLASHING, false);
+        }
 
-    private Animator animator;
+        #endregion
 
+        
+        #region Event: OnProgressChanged
 
-    private void Awake() {
-        animator = GetComponent<Animator>();
+        private void OnProgressChanged(object sender, IHasProgress.OnProgressChangedEventArgs e)
+        {
+            float burnShowProgressAmount = .5f;
+            bool show = stoveCounter.IsFried() && e.progressNormalized >= burnShowProgressAmount;
+
+            animator.SetBool(IS_FLASHING, show);
+        }
+
+        #endregion
+
+        #region Events: Add | Remove
+
+        private void AddEvents()
+        {
+            stoveCounter.OnProgressChanged += OnProgressChanged;
+        }
+
+        private void RemoveEvents()
+        {
+            stoveCounter.OnProgressChanged -= OnProgressChanged;
+        }
+
+        #endregion
     }
-
-    private void Start() {
-        stoveCounter.OnProgressChanged += StoveCounter_OnProgressChanged;
-
-        animator.SetBool(IS_FLASHING, false);
-    }
-
-    private void StoveCounter_OnProgressChanged(object sender, IHasProgress.OnProgressChangedEventArgs e) {
-        float burnShowProgressAmount = .5f;
-        bool show = stoveCounter.IsFried() && e.progressNormalized >= burnShowProgressAmount;
-
-        animator.SetBool(IS_FLASHING, show);
-    }
-
 }

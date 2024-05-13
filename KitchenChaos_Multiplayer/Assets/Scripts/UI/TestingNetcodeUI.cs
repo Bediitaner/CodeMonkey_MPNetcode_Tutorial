@@ -6,19 +6,34 @@ namespace UI
 {
     public class TestingNetcodeUI : MonoBehaviour
     {
+        #region Contents
+
         [SerializeField] private Button _hostButton;
         [SerializeField] private Button _clientButton;
+
+        #endregion
+
+        #region Unity: Awake
 
         private void Awake()
         {
             AddEvents();
         }
 
+        #endregion
+
+        
+        #region Hide
+
         private void Hide()
         {
             gameObject.SetActive(false);
         }
+        
 
+        #endregion
+        
+        
         #region Event: OnHostButtonClicked
 
         private void OnHostButtonClicked()

@@ -1,44 +1,87 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
-public class DeliveryManagerUI : MonoBehaviour {
+namespace UI
+{
+    public class DeliveryManagerUI : MonoBehaviour
+    {
+        #region Contents
 
+        [SerializeField] private Transform container;
+        [SerializeField] private Transform recipeTemplate;
 
-    [SerializeField] private Transform container;
-    [SerializeField] private Transform recipeTemplate;
+        #endregion
 
+        #region Unity: Awake | Start
 
-    private void Awake() {
-        recipeTemplate.gameObject.SetActive(false);
-    }
-
-    private void Start() {
-        DeliveryManager.Instance.OnRecipeSpawned += DeliveryManager_OnRecipeSpawned;
-        DeliveryManager.Instance.OnRecipeCompleted += DeliveryManager_OnRecipeCompleted;
-
-        UpdateVisual();
-    }
-
-    private void DeliveryManager_OnRecipeCompleted(object sender, System.EventArgs e) {
-        UpdateVisual();
-    }
-
-    private void DeliveryManager_OnRecipeSpawned(object sender, System.EventArgs e) {
-        UpdateVisual();
-    }
-
-    private void UpdateVisual() {
-        foreach (Transform child in container) {
-            if (child == recipeTemplate) continue;
-            Destroy(child.gameObject);
+        private void Awake()
+        {
+            recipeTemplate.gameObject.SetActive(false);
         }
 
-        foreach (RecipeSO recipeSO in DeliveryManager.Instance.GetWaitingRecipeSOList()) {
-            Transform recipeTransform = Instantiate(recipeTemplate, container);
-            recipeTransform.gameObject.SetActive(true);
-            recipeTransform.GetComponent<DeliveryManagerSingleUI>().SetRecipeSO(recipeSO);
-        }
-    }
+        private void Start()
+        {
+            AddEvents();
 
+            UpdateUI();
+        }
+
+        #endregion
+
+
+        #region Update: UI
+
+        private void UpdateUI()
+        {
+            foreach (Transform child in container)
+            {
+                if (child == recipeTemplate) continue;
+                Destroy(child.gameObject);
+            }
+
+            foreach (RecipeSO recipeSO in DeliveryManager.Instance.GetWaitingRecipeSOList())
+            {
+                Transform recipeTransform = Instantiate(recipeTemplate, container);
+                recipeTransform.gameObject.SetActive(true);
+                recipeTransform.GetComponent<DeliveryManagerSingleUI>().SetRecipeSO(recipeSO);
+            }
+        }
+
+        #endregion
+
+        
+        #region Event: OnRecipeCompleted
+
+        private void OnRecipeCompleted(object sender, EventArgs e)
+        {
+            UpdateUI();
+        }
+
+        #endregion
+
+        #region Event: OnRecipeSpawned
+
+        private void OnRecipeSpawned(object sender, EventArgs e)
+        {
+            UpdateUI();
+        }
+
+        #endregion
+
+        #region Events: Add | Remove
+
+        private void AddEvents()
+        {
+            DeliveryManager.Instance.OnRecipeSpawned += OnRecipeSpawned;
+            DeliveryManager.Instance.OnRecipeCompleted += OnRecipeCompleted;
+        }
+        
+        private void RemoveEvents()
+        {
+            DeliveryManager.Instance.OnRecipeSpawned -= OnRecipeSpawned;
+            DeliveryManager.Instance.OnRecipeCompleted -= OnRecipeCompleted;
+        }
+
+        #endregion
+    }
 }

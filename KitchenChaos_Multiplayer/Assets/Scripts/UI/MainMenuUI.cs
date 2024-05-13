@@ -1,25 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MainMenuUI : MonoBehaviour {
+namespace UI
+{
+    public class MainMenuUI : MonoBehaviour
+    {
+        #region Contents
 
+        [SerializeField] private Button playButton;
+        [SerializeField] private Button quitButton;
 
-    [SerializeField] private Button playButton;
-    [SerializeField] private Button quitButton;
+        #endregion
+        
+        #region Unity: Awake
 
+        private void Awake()
+        {
+            playButton.onClick.AddListener(() => { Loader.Load(Loader.Scene.GameScene); });
+            quitButton.onClick.AddListener(() => { Application.Quit(); });
 
-    private void Awake() {
-        playButton.onClick.AddListener(() => {
-            Loader.Load(Loader.Scene.GameScene);
-        });
-        quitButton.onClick.AddListener(() => {
-            Application.Quit();
-        });
+            Time.timeScale = 1f;
+        }
 
-        Time.timeScale = 1f;
+        #endregion
     }
-
 }

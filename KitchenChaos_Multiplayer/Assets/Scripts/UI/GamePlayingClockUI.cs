@@ -1,15 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GamePlayingClockUI : MonoBehaviour {
+namespace UI
+{
+    public class GamePlayingClockUI : MonoBehaviour
+    {
+        #region Contents
 
+        [SerializeField] private Image timerImage;
+        
+        #endregion
 
-    [SerializeField] private Image timerImage;
+        #region Unity: Update
 
+        private void Update()
+        {
+            timerImage.fillAmount = KitchenGameManager.Instance.GetGamePlayingTimerNormalized();
+        }
 
-    private void Update() {
-        timerImage.fillAmount = KitchenGameManager.Instance.GetGamePlayingTimerNormalized();
+        #endregion
     }
 }

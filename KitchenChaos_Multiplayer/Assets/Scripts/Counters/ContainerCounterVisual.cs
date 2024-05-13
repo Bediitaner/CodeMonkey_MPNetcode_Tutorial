@@ -1,29 +1,61 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
-public class ContainerCounterVisual : MonoBehaviour {
+namespace Counters
+{
+    public class ContainerCounterVisual : MonoBehaviour
+    {
+        #region Contents
+
+        [SerializeField] private ContainerCounter containerCounter;
+
+        #endregion
+        
+        #region Fields
+
+        private Animator animator;
+
+        private const string OPEN_CLOSE = "OpenClose";
+
+        #endregion
+
+        #region Unity: Awake | Start
+
+        private void Awake()
+        {
+            animator = GetComponent<Animator>();
+        }
+
+        private void Start()
+        {
+            AddEvents();
+        }
+
+        #endregion
 
 
-    private const string OPEN_CLOSE = "OpenClose";
+        #region Event: OnPlayerGrabbedObject
+
+        private void OnPlayerGrabbedObject(object sender, EventArgs e)
+        {
+            animator.SetTrigger(OPEN_CLOSE);
+        }
+
+        #endregion
 
 
-    [SerializeField] private ContainerCounter containerCounter;
+        #region Events: Add | Remove
 
+        private void AddEvents()
+        {
+            containerCounter.OnPlayerGrabbedObject += OnPlayerGrabbedObject;
+        }
 
-    private Animator animator;
+        private void RemoveEvents()
+        {
+            containerCounter.OnPlayerGrabbedObject -= OnPlayerGrabbedObject;
+        }
 
-
-    private void Awake() {
-        animator = GetComponent<Animator>();
+        #endregion
     }
-
-    private void Start() {
-        containerCounter.OnPlayerGrabbedObject += ContainerCounter_OnPlayerGrabbedObject;
-    }
-
-    private void ContainerCounter_OnPlayerGrabbedObject(object sender, System.EventArgs e) {
-        animator.SetTrigger(OPEN_CLOSE);
-    }
-
 }

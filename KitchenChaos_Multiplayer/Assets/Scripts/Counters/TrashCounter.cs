@@ -1,25 +1,37 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-public class TrashCounter : BaseCounter {
+namespace Counters
+{
+    public class TrashCounter : BaseCounter
+    {
+        #region Events
 
+        public static event EventHandler OnAnyObjectTrashed;
 
-    public static event EventHandler OnAnyObjectTrashed;
+        #endregion
 
-    new public static void ResetStaticData() {
-        OnAnyObjectTrashed = null;
-    }
+        #region Reset: StaticData
 
-
-
-    public override void Interact(Player player) {
-        if (player.HasKitchenObject()) {
-            player.GetKitchenObject().DestroySelf();
-
-            OnAnyObjectTrashed?.Invoke(this, EventArgs.Empty);
+        new public static void ResetStaticData()
+        {
+            OnAnyObjectTrashed = null;
         }
-    }
 
+        #endregion
+
+
+        #region Override: Interact
+
+        public override void Interact(Player player)
+        {
+            if (player.HasKitchenObject())
+            {
+                player.GetKitchenObject().DestroySelf();
+
+                OnAnyObjectTrashed?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        #endregion
+    }
 }

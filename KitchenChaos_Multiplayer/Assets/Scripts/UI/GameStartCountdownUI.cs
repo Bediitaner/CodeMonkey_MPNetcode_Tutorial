@@ -1,57 +1,99 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using TMPro;
 using UnityEngine;
 
-public class GameStartCountdownUI : MonoBehaviour {
+namespace UI
+{
+    public class GameStartCountdownUI : MonoBehaviour
+    {
+        #region Contents
 
+        [SerializeField] private TextMeshProUGUI countdownText;
 
+        #endregion
+        
+        #region Fields
 
-    private const string NUMBER_POPUP = "NumberPopup";
+        private Animator animator;
+        private int previousCountdownNumber;
 
+        private const string NUMBER_POPUP = "NumberPopup";
 
-    [SerializeField] private TextMeshProUGUI countdownText;
+        #endregion
 
+        #region Unity: Awake | Start | Update
 
-    private Animator animator;
-    private int previousCountdownNumber;
+        private void Awake()
+        {
+            animator = GetComponent<Animator>();
+        }
 
-    
-    private void Awake() {
-        animator = GetComponent<Animator>();
-    }
-
-    private void Start() {
-        KitchenGameManager.Instance.OnStateChanged += KitchenGameManager_OnStateChanged;
-
-        Hide();
-    }
-
-    private void KitchenGameManager_OnStateChanged(object sender, System.EventArgs e) {
-        if (KitchenGameManager.Instance.IsCountdownToStartActive()) {
-            Show();
-        } else {
+        private void Start()
+        {
+            AddEvents();
             Hide();
         }
-    }
+        
+        private void Update()
+        {
+            int countdownNumber = Mathf.CeilToInt(KitchenGameManager.Instance.GetCountdownToStartTimer());
+            countdownText.text = countdownNumber.ToString();
 
-    private void Update() {
-        int countdownNumber = Mathf.CeilToInt(KitchenGameManager.Instance.GetCountdownToStartTimer());
-        countdownText.text = countdownNumber.ToString();
-
-        if (previousCountdownNumber != countdownNumber) {
-            previousCountdownNumber = countdownNumber;
-            animator.SetTrigger(NUMBER_POPUP);
-            SoundManager.Instance.PlayCountdownSound();
+            if (previousCountdownNumber != countdownNumber)
+            {
+                previousCountdownNumber = countdownNumber;
+                animator.SetTrigger(NUMBER_POPUP);
+                SoundManager.Instance.PlayCountdownSound();
+            }
         }
-    }
+        
 
-    private void Show() {
-        gameObject.SetActive(true);
-    }
+        #endregion
+        
+        
+        #region Show | Hide
 
-    private void Hide() {
-        gameObject.SetActive(false);
-    }
+        private void Show()
+        {
+            gameObject.SetActive(true);
+        }
 
+        private void Hide()
+        {
+            gameObject.SetActive(false);
+        }
+
+        #endregion
+        
+        
+        #region Event: OnStateChanged
+
+        private void OnStateChanged(object sender, EventArgs e)
+        {
+            if (KitchenGameManager.Instance.IsCountdownToStartActive())
+            {
+                Show();
+            }
+            else
+            {
+                Hide();
+            }
+        }
+
+        #endregion
+
+        #region Events: Add | Remove
+
+        private void AddEvents()
+        {
+            KitchenGameManager.Instance.OnStateChanged += OnStateChanged;
+        }
+
+        private void RemoveEvents()
+        {
+            KitchenGameManager.Instance.OnStateChanged -= OnStateChanged;
+        }
+
+        #endregion
+    }
 }

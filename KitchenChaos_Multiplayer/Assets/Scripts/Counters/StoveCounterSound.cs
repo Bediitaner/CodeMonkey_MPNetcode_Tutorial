@@ -1,50 +1,96 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class StoveCounterSound : MonoBehaviour {
+namespace Counters
+{
+    public class StoveCounterSound : MonoBehaviour
+    {
+        #region Content
 
+        [SerializeField] private StoveCounter stoveCounter;
 
-    [SerializeField] private StoveCounter stoveCounter;
+        #endregion
+        
+        #region Fields
 
+        private AudioSource audioSource;
+        private float warningSoundTimer;
+        private bool playWarningSound;
 
-    private AudioSource audioSource;
-    private float warningSoundTimer;
-    private bool playWarningSound;
+        #endregion
 
-    private void Awake() {
-        audioSource = GetComponent<AudioSource>();
-    }
+        #region Unity: Awake | Start | Update
 
-    private void Start() {
-        stoveCounter.OnStateChanged += StoveCounter_OnStateChanged;
-        stoveCounter.OnProgressChanged += StoveCounter_OnProgressChanged;
-    }
-
-    private void StoveCounter_OnProgressChanged(object sender, IHasProgress.OnProgressChangedEventArgs e) {
-        float burnShowProgressAmount = .5f;
-        playWarningSound = stoveCounter.IsFried() && e.progressNormalized >= burnShowProgressAmount;
-    }
-
-    private void StoveCounter_OnStateChanged(object sender, StoveCounter.OnStateChangedEventArgs e) {
-        bool playSound = e.state == StoveCounter.State.Frying || e.state == StoveCounter.State.Fried;
-        if (playSound) {
-            audioSource.Play();
-        } else {
-            audioSource.Pause();
+        private void Awake()
+        {
+            audioSource = GetComponent<AudioSource>();
         }
-    }
 
-    private void Update() {
-        if (playWarningSound) {
-            warningSoundTimer -= Time.deltaTime;
-            if (warningSoundTimer <= 0f) {
-                float warningSoundTimerMax = .2f;
-                warningSoundTimer = warningSoundTimerMax;
+        private void Start()
+        {
+            AddEvents();
+        }
+        
+        private void Update()
+        {
+            if (playWarningSound)
+            {
+                warningSoundTimer -= Time.deltaTime;
+                if (warningSoundTimer <= 0f)
+                {
+                    float warningSoundTimerMax = .2f;
+                    warningSoundTimer = warningSoundTimerMax;
 
-                SoundManager.Instance.PlayWarningSound(stoveCounter.transform.position);
+                    SoundManager.Instance.PlayWarningSound(stoveCounter.transform.position);
+                }
             }
         }
-    }
 
+        #endregion
+
+
+        #region Event: OnProgressChanged
+
+        private void OnProgressChanged(object sender, IHasProgress.OnProgressChangedEventArgs e)
+        {
+            float burnShowProgressAmount = .5f;
+            playWarningSound = stoveCounter.IsFried() && e.progressNormalized >= burnShowProgressAmount;
+        }
+        
+
+        #endregion
+
+        #region Event: OnStateChanged
+
+        private void OnStateChanged(object sender, StoveCounter.OnStateChangedEventArgs e)
+        {
+            bool playSound = e.state == State.Frying || e.state == State.Fried;
+            if (playSound)
+            {
+                audioSource.Play();
+            }
+            else
+            {
+                audioSource.Pause();
+            }
+        }
+        
+
+        #endregion
+        
+        #region Events: Add | Remove
+
+        private void AddEvents()
+        {
+            stoveCounter.OnProgressChanged += OnProgressChanged;
+            stoveCounter.OnStateChanged += OnStateChanged;
+        }
+
+        private void RemoveEvents()
+        {
+            stoveCounter.OnProgressChanged -= OnProgressChanged;
+            stoveCounter.OnStateChanged -= OnStateChanged;
+        }
+        
+        #endregion
+    }
 }
