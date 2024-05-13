@@ -89,7 +89,7 @@ namespace UI
 
         #endregion
 
-        
+
         #region Update: UI
 
         private void UpdateUI()
@@ -97,16 +97,16 @@ namespace UI
             soundEffectsText.text = "Sound Effects: " + Mathf.Round(SoundManager.Instance.GetVolume() * 10f);
             musicText.text = "Music: " + Mathf.Round(MusicManager.Instance.GetVolume() * 10f);
 
-            moveUpText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Move_Up);
-            moveDownText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Move_Down);
-            moveLeftText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Move_Left);
-            moveRightText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Move_Right);
-            interactText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Interact);
-            interactAlternateText.text = GameInput.Instance.GetBindingText(GameInput.Binding.InteractAlternate);
-            pauseText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Pause);
-            gamepadInteractText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Gamepad_Interact);
-            gamepadInteractAlternateText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Gamepad_InteractAlternate);
-            gamepadPauseText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Gamepad_Pause);
+            moveUpText.text = GameInput.Instance.GetBindingText(Binding.Move_Up);
+            moveDownText.text = GameInput.Instance.GetBindingText(Binding.Move_Down);
+            moveLeftText.text = GameInput.Instance.GetBindingText(Binding.Move_Left);
+            moveRightText.text = GameInput.Instance.GetBindingText(Binding.Move_Right);
+            interactText.text = GameInput.Instance.GetBindingText(Binding.Interact);
+            interactAlternateText.text = GameInput.Instance.GetBindingText(Binding.InteractAlternate);
+            pauseText.text = GameInput.Instance.GetBindingText(Binding.Pause);
+            gamepadInteractText.text = GameInput.Instance.GetBindingText(Binding.Gamepad_Interact);
+            gamepadInteractAlternateText.text = GameInput.Instance.GetBindingText(Binding.Gamepad_InteractAlternate);
+            gamepadPauseText.text = GameInput.Instance.GetBindingText(Binding.Gamepad_Pause);
         }
 
         #endregion
@@ -128,7 +128,7 @@ namespace UI
 
         #region RebindBinding
 
-        private void RebindBinding(GameInput.Binding binding)
+        private void RebindBinding(Binding binding)
         {
             ShowPressToRebindKey();
             GameInput.Instance.RebindBinding(binding, () =>
@@ -170,16 +170,16 @@ namespace UI
                 onCloseButtonAction();
             });
 
-            moveUpButton.onClick.AddListener(() => { RebindBinding(GameInput.Binding.Move_Up); });
-            moveDownButton.onClick.AddListener(() => { RebindBinding(GameInput.Binding.Move_Down); });
-            moveLeftButton.onClick.AddListener(() => { RebindBinding(GameInput.Binding.Move_Left); });
-            moveRightButton.onClick.AddListener(() => { RebindBinding(GameInput.Binding.Move_Right); });
-            interactButton.onClick.AddListener(() => { RebindBinding(GameInput.Binding.Interact); });
-            interactAlternateButton.onClick.AddListener(() => { RebindBinding(GameInput.Binding.InteractAlternate); });
-            pauseButton.onClick.AddListener(() => { RebindBinding(GameInput.Binding.Pause); });
-            gamepadInteractButton.onClick.AddListener(() => { RebindBinding(GameInput.Binding.Gamepad_Interact); });
-            gamepadInteractAlternateButton.onClick.AddListener(() => { RebindBinding(GameInput.Binding.Gamepad_InteractAlternate); });
-            gamepadPauseButton.onClick.AddListener(() => { RebindBinding(GameInput.Binding.Gamepad_Pause); });
+            moveUpButton.onClick.AddListener(() => { RebindBinding(Binding.Move_Up); });
+            moveDownButton.onClick.AddListener(() => { RebindBinding(Binding.Move_Down); });
+            moveLeftButton.onClick.AddListener(() => { RebindBinding(Binding.Move_Left); });
+            moveRightButton.onClick.AddListener(() => { RebindBinding(Binding.Move_Right); });
+            interactButton.onClick.AddListener(() => { RebindBinding(Binding.Interact); });
+            interactAlternateButton.onClick.AddListener(() => { RebindBinding(Binding.InteractAlternate); });
+            pauseButton.onClick.AddListener(() => { RebindBinding(Binding.Pause); });
+            gamepadInteractButton.onClick.AddListener(() => { RebindBinding(Binding.Gamepad_Interact); });
+            gamepadInteractAlternateButton.onClick.AddListener(() => { RebindBinding(Binding.Gamepad_InteractAlternate); });
+            gamepadPauseButton.onClick.AddListener(() => { RebindBinding(Binding.Gamepad_Pause); });
 
             KitchenGameManager.Instance.OnGameUnpaused += OnGameUnpaused;
         }

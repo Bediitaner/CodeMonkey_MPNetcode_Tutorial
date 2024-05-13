@@ -53,16 +53,16 @@ namespace UI
 
         private void UpdateUI()
         {
-            keyMoveUpText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Move_Up);
-            keyMoveDownText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Move_Down);
-            keyMoveLeftText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Move_Left);
-            keyMoveRightText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Move_Right);
-            keyInteractText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Interact);
-            keyInteractAlternateText.text = GameInput.Instance.GetBindingText(GameInput.Binding.InteractAlternate);
-            keyPauseText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Pause);
-            keyGamepadInteractText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Gamepad_Interact);
-            keyGamepadInteractAlternateText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Gamepad_InteractAlternate);
-            keyGamepadPauseText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Gamepad_Pause);
+            keyMoveUpText.text = GameInput.Instance.GetBindingText(Binding.Move_Up);
+            keyMoveDownText.text = GameInput.Instance.GetBindingText(Binding.Move_Down);
+            keyMoveLeftText.text = GameInput.Instance.GetBindingText(Binding.Move_Left);
+            keyMoveRightText.text = GameInput.Instance.GetBindingText(Binding.Move_Right);
+            keyInteractText.text = GameInput.Instance.GetBindingText(Binding.Interact);
+            keyInteractAlternateText.text = GameInput.Instance.GetBindingText(Binding.InteractAlternate);
+            keyPauseText.text = GameInput.Instance.GetBindingText(Binding.Pause);
+            keyGamepadInteractText.text = GameInput.Instance.GetBindingText(Binding.Gamepad_Interact);
+            keyGamepadInteractAlternateText.text = GameInput.Instance.GetBindingText(Binding.Gamepad_InteractAlternate);
+            keyGamepadPauseText.text = GameInput.Instance.GetBindingText(Binding.Gamepad_Pause);
         }
 
         #endregion

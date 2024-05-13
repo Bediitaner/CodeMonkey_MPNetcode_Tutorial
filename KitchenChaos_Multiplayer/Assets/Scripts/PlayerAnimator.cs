@@ -3,14 +3,21 @@ using UnityEngine;
 
 public class PlayerAnimator : NetworkBehaviour
 {
-    private const string IS_WALKING = "IsWalking";
-
+    #region Contents
 
     [SerializeField] private Player player;
 
+    #endregion
 
-    private Animator animator; 
+    #region Fields
 
+    private Animator animator;
+
+    private const string IS_WALKING = "IsWalking";
+
+    #endregion
+
+    #region Unity: Awake | Update
 
     private void Awake()
     {
@@ -21,7 +28,9 @@ public class PlayerAnimator : NetworkBehaviour
     {
         if (!IsOwner)
             return;
-        
+
         animator.SetBool(IS_WALKING, player.IsWalking());
     }
+
+    #endregion
 }

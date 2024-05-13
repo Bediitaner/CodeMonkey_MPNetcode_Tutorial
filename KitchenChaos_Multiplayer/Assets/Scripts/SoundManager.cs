@@ -1,92 +1,97 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using Counters;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
-public class SoundManager : MonoBehaviour {
-
-
-    private const string PLAYER_PREFS_SOUND_EFFECTS_VOLUME = "SoundEffectsVolume";
-
+public class SoundManager : MonoBehaviour
+{
+    #region Singleton
 
     public static SoundManager Instance { get; private set; }
 
+    #endregion
 
+    #region Contents
 
     [SerializeField] private AudioClipRefsSO audioClipRefsSO;
 
+    #endregion
+
+    #region Fields
 
     private float volume = 1f;
 
+    private const string PLAYER_PREFS_SOUND_EFFECTS_VOLUME = "SoundEffectsVolume";
 
-    private void Awake() {
+    #endregion
+
+
+    #region Unity: Awake | Start
+
+    private void Awake()
+    {
         Instance = this;
 
         volume = PlayerPrefs.GetFloat(PLAYER_PREFS_SOUND_EFFECTS_VOLUME, 1f);
     }
 
-    private void Start() {
-        DeliveryManager.Instance.OnRecipeSuccess += DeliveryManager_OnRecipeSuccess;
-        DeliveryManager.Instance.OnRecipeFailed += DeliveryManager_OnRecipeFailed;
-        CuttingCounter.OnAnyCut += CuttingCounter_OnAnyCut;
-        Player.OnAnyPickedSomething += OnAnyPickedSomething;
-        BaseCounter.OnAnyObjectPlacedHere += BaseCounter_OnAnyObjectPlacedHere;
-        TrashCounter.OnAnyObjectTrashed += TrashCounter_OnAnyObjectTrashed;
+    private void Start()
+    {
+        AddEvents();
     }
 
-    private void TrashCounter_OnAnyObjectTrashed(object sender, System.EventArgs e) {
-        TrashCounter trashCounter = sender as TrashCounter;
-        PlaySound(audioClipRefsSO.trash, trashCounter.transform.position);
-    }
+    #endregion
 
-    private void BaseCounter_OnAnyObjectPlacedHere(object sender, System.EventArgs e) {
-        BaseCounter baseCounter = sender as BaseCounter;
-        PlaySound(audioClipRefsSO.objectDrop, baseCounter.transform.position);
-    }
 
-    private void OnAnyPickedSomething(object sender, System.EventArgs e) {
-        Player player = sender as Player;
-        PlaySound(audioClipRefsSO.objectPickup, player.transform.position);
-    }
+    #region Play: Sound
 
-    private void CuttingCounter_OnAnyCut(object sender, System.EventArgs e) {
-        CuttingCounter cuttingCounter = sender as CuttingCounter;
-        PlaySound(audioClipRefsSO.chop, cuttingCounter.transform.position);
-    }
-
-    private void DeliveryManager_OnRecipeFailed(object sender, System.EventArgs e) {
-        DeliveryCounter deliveryCounter = DeliveryCounter.Instance;
-        PlaySound(audioClipRefsSO.deliveryFail, deliveryCounter.transform.position);
-    }
-
-    private void DeliveryManager_OnRecipeSuccess(object sender, System.EventArgs e) {
-        DeliveryCounter deliveryCounter = DeliveryCounter.Instance;
-        PlaySound(audioClipRefsSO.deliverySuccess, deliveryCounter.transform.position);
-    }
-
-    private void PlaySound(AudioClip[] audioClipArray, Vector3 position, float volume = 1f) {
+    private void PlaySound(AudioClip[] audioClipArray, Vector3 position, float volume = 1f)
+    {
         PlaySound(audioClipArray[Random.Range(0, audioClipArray.Length)], position, volume);
     }
 
-    private void PlaySound(AudioClip audioClip, Vector3 position, float volumeMultiplier = 1f) {
+    private void PlaySound(AudioClip audioClip, Vector3 position, float volumeMultiplier = 1f)
+    {
         AudioSource.PlayClipAtPoint(audioClip, position, volumeMultiplier * volume);
     }
 
-    public void PlayFootstepsSound(Vector3 position, float volume) {
+    #endregion
+
+    #region Play: FootstepsSound
+
+    public void PlayFootstepsSound(Vector3 position, float volume)
+    {
         PlaySound(audioClipRefsSO.footstep, position, volume);
     }
 
-    public void PlayCountdownSound() {
+    #endregion
+
+    #region Play: CountdownSound
+
+    public void PlayCountdownSound()
+    {
         PlaySound(audioClipRefsSO.warning, Vector3.zero);
     }
 
-    public void PlayWarningSound(Vector3 position) {
+    #endregion
+
+    #region Play: WarningSound
+
+    public void PlayWarningSound(Vector3 position)
+    {
         PlaySound(audioClipRefsSO.warning, position);
     }
 
-    public void ChangeVolume() {
+    #endregion
+
+
+    #region Change: Volume
+
+    public void ChangeVolume()
+    {
         volume += .1f;
-        if (volume > 1f) {
+        if (volume > 1f)
+        {
             volume = 0f;
         }
 
@@ -94,9 +99,99 @@ public class SoundManager : MonoBehaviour {
         PlayerPrefs.Save();
     }
 
-    public float GetVolume() {
+    #endregion
+
+    #region Get: Volume
+
+    public float GetVolume()
+    {
         return volume;
     }
 
+    #endregion
 
+
+    #region Event: OnAnyObjectTrashed
+
+    private void OnAnyObjectTrashed(object sender, EventArgs e)
+    {
+        TrashCounter trashCounter = sender as TrashCounter;
+        PlaySound(audioClipRefsSO.trash, trashCounter.transform.position);
+    }
+
+    #endregion
+
+    #region Event: OnAnyObjectPlacedHere
+
+    private void OnAnyObjectPlacedHere(object sender, EventArgs e)
+    {
+        BaseCounter baseCounter = sender as BaseCounter;
+        PlaySound(audioClipRefsSO.objectDrop, baseCounter.transform.position);
+    }
+
+    #endregion
+
+    #region Event: OnAnyPickedSomething
+
+    private void OnAnyPickedSomething(object sender, EventArgs e)
+    {
+        Player player = sender as Player;
+        PlaySound(audioClipRefsSO.objectPickup, player.transform.position);
+    }
+
+    #endregion
+
+    #region Event: OnAnyCut
+
+    private void OnAnyCut(object sender, EventArgs e)
+    {
+        CuttingCounter cuttingCounter = sender as CuttingCounter;
+        PlaySound(audioClipRefsSO.chop, cuttingCounter.transform.position);
+    }
+
+    #endregion
+
+    #region Event: OnRecipeFailed
+
+    private void OnRecipeFailed(object sender, EventArgs e)
+    {
+        DeliveryCounter deliveryCounter = DeliveryCounter.Instance;
+        PlaySound(audioClipRefsSO.deliveryFail, deliveryCounter.transform.position);
+    }
+
+    #endregion
+
+    #region Event: OnRecipeSuccess
+
+    private void OnRecipeSuccess(object sender, EventArgs e)
+    {
+        DeliveryCounter deliveryCounter = DeliveryCounter.Instance;
+        PlaySound(audioClipRefsSO.deliverySuccess, deliveryCounter.transform.position);
+    }
+
+    #endregion
+
+    #region Events: Add | Remove
+
+    private void AddEvents()
+    {
+        DeliveryManager.Instance.OnRecipeSuccess += OnRecipeSuccess;
+        DeliveryManager.Instance.OnRecipeFailed += OnRecipeFailed;
+        CuttingCounter.OnAnyCut += OnAnyCut;
+        Player.OnAnyPickedSomething += OnAnyPickedSomething;
+        BaseCounter.OnAnyObjectPlacedHere += OnAnyObjectPlacedHere;
+        TrashCounter.OnAnyObjectTrashed += OnAnyObjectTrashed;
+    }
+
+    private void RemoveEvents()
+    {
+        DeliveryManager.Instance.OnRecipeSuccess -= OnRecipeSuccess;
+        DeliveryManager.Instance.OnRecipeFailed -= OnRecipeFailed;
+        CuttingCounter.OnAnyCut -= OnAnyCut;
+        Player.OnAnyPickedSomething -= OnAnyPickedSomething;
+        BaseCounter.OnAnyObjectPlacedHere -= OnAnyObjectPlacedHere;
+        TrashCounter.OnAnyObjectTrashed -= OnAnyObjectTrashed;
+    }
+
+    #endregion
 }

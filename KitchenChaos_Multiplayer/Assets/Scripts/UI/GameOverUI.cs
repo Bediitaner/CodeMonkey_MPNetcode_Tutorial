@@ -18,7 +18,7 @@ namespace UI
 
         private void Awake()
         {
-            playAgainButton.onClick.AddListener(() => { Loader.Load(Loader.Scene.MainMenuScene); });
+            playAgainButton.onClick.AddListener(() => { Loader.Load(Scene.MainMenuScene); });
         }
 
         private void Start()

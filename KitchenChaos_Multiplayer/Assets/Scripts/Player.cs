@@ -3,78 +3,65 @@ using Counters;
 using Unity.Netcode;
 using UnityEngine;
 
+public class OnSelectedCounterChangedEventArgs : EventArgs
+{
+    public BaseCounter selectedCounter;
+}
+
 public class Player : NetworkBehaviour, IKitchenObjectParent
 {
+    #region Events
+
     public static event EventHandler OnAnyPlayerSpawned;
     public static event EventHandler OnAnyPickedSomething;
-    
-    public static void ResetStaticData() {
-        OnAnyPlayerSpawned = null;
-    }
-
-    
-    public static Player LocalInstance { get; private set; }
-
-
     public event EventHandler OnPickedSomething;
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
 
-    public class OnSelectedCounterChangedEventArgs : EventArgs
+    #endregion
+
+    #region Singleton
+
+    public static Player LocalInstance { get; private set; }
+
+    #endregion
+
+    #region Reset: StaticData
+
+    public static void ResetStaticData()
     {
-        public BaseCounter selectedCounter;
+        OnAnyPlayerSpawned = null;
     }
 
+    #endregion
+
+
+    #region Contents
 
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private LayerMask countersLayerMask;
     [SerializeField] private Transform kitchenObjectHoldPoint;
 
+    #endregion
+
+    #region Fields
 
     private bool isWalking;
     private Vector3 lastInteractDir;
     private BaseCounter selectedCounter;
     private KitchenObject kitchenObject;
 
+    #endregion
+
+
+    #region Unity: Awake | Start | Update
 
     private void Awake()
     {
-        
     }
 
     private void Start()
     {
-        GameInput.Instance.OnInteractAction += GameInput_OnInteractAction;
-        GameInput.Instance.OnInteractAlternateAction += GameInput_OnInteractAlternateAction;
-    }
-
-    public override void OnNetworkSpawn()
-    {
-        if (IsOwner)
-        {
-            LocalInstance = this;
-        }
-        
-        OnAnyPlayerSpawned?.Invoke(this, EventArgs.Empty);
-    }
-
-    private void GameInput_OnInteractAlternateAction(object sender, EventArgs e)
-    {
-        if (!KitchenGameManager.Instance.IsGamePlaying()) return;
-
-        if (selectedCounter != null)
-        {
-            selectedCounter.InteractAlternate(this);
-        }
-    }
-
-    private void GameInput_OnInteractAction(object sender, System.EventArgs e)
-    {
-        if (!KitchenGameManager.Instance.IsGamePlaying()) return;
-
-        if (selectedCounter != null)
-        {
-            selectedCounter.Interact(this);
-        }
+        AddEvents();
     }
 
     private void Update()
@@ -85,10 +72,43 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
         HandleInteractions();
     }
 
+    #endregion
+
+    #region Override: OnNetworkSpawn
+
+    public override void OnNetworkSpawn()
+    {
+        if (IsOwner)
+        {
+            LocalInstance = this;
+        }
+
+        OnAnyPlayerSpawned?.Invoke(this, EventArgs.Empty);
+    }
+
+    #endregion
+
+
+    #region Is: Walking
+
     public bool IsWalking()
     {
         return isWalking;
     }
+
+    #endregion
+
+    #region Has: KitchenObject
+
+    public bool HasKitchenObject()
+    {
+        return kitchenObject != null;
+    }
+
+    #endregion
+
+
+    #region Handle: Interactions
 
     private void HandleInteractions()
     {
@@ -122,6 +142,10 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
             SetSelectedCounter(null);
         }
     }
+
+    #endregion
+
+    #region Handle: Movement
 
     private void HandleMovement()
     {
@@ -180,6 +204,11 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
         transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
     }
 
+    #endregion
+
+
+    #region Set: SelectedCounter
+
     private void SetSelectedCounter(BaseCounter selectedCounter)
     {
         this.selectedCounter = selectedCounter;
@@ -190,10 +219,9 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
         });
     }
 
-    public Transform GetKitchenObjectFollowTransform()
-    {
-        return kitchenObjectHoldPoint;
-    }
+    #endregion
+
+    #region Set: KitchenObject
 
     public void SetKitchenObject(KitchenObject kitchenObject)
     {
@@ -206,23 +234,88 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
         }
     }
 
+    #endregion
+
+
+    #region Get: KitchenObjectFollowTransform
+
+    public Transform GetKitchenObjectFollowTransform()
+    {
+        return kitchenObjectHoldPoint;
+    }
+
+    #endregion
+
+    #region Get: KitchenObject
+
     public KitchenObject GetKitchenObject()
     {
         return kitchenObject;
     }
+
+    #endregion
+
+    #region Get: NetworkObject
+
+    public NetworkObject GetNetworkObject()
+    {
+        return NetworkObject;
+    }
+
+    #endregion
+
+
+    #region Clear: KitchenObject
 
     public void ClearKitchenObject()
     {
         kitchenObject = null;
     }
 
-    public bool HasKitchenObject()
+    #endregion
+
+
+    #region Event: OnInteractAlternateAction
+
+    private void OnInteractAlternateAction(object sender, EventArgs e)
     {
-        return kitchenObject != null;
+        if (!KitchenGameManager.Instance.IsGamePlaying()) return;
+
+        if (selectedCounter != null)
+        {
+            selectedCounter.InteractAlternate(this);
+        }
     }
 
-    public NetworkObject GetNetworkObject()
+    #endregion
+
+    #region Event: OnInteractAction
+
+    private void OnInteractAction(object sender, EventArgs e)
     {
-        return NetworkObject;
+        if (!KitchenGameManager.Instance.IsGamePlaying()) return;
+
+        if (selectedCounter != null)
+        {
+            selectedCounter.Interact(this);
+        }
     }
+
+    #endregion
+
+    #region Events: Add | Remove
+
+    private void AddEvents()
+    {
+        GameInput.Instance.OnInteractAction += OnInteractAction;
+        GameInput.Instance.OnInteractAlternateAction += OnInteractAlternateAction;
+    }
+
+    private void RemoveEvents()
+    {
+        GameInput.Instance.OnInteractAction -= OnInteractAction;
+        GameInput.Instance.OnInteractAlternateAction -= OnInteractAlternateAction;
+    }
+
+    #endregion
 }

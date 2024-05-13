@@ -1,16 +1,24 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FollowTransform : MonoBehaviour
 {
+    #region Content
+
     private Transform targetTransform;
+
+    #endregion
+
+    #region Set: TargetTransform
 
     public void SetTargetTransform(Transform targetTransform)
     {
         this.targetTransform = targetTransform;
     }
+
+    #endregion
+
+    
+    #region Unity: LateUpdate
 
     private void LateUpdate()
     {
@@ -22,4 +30,6 @@ public class FollowTransform : MonoBehaviour
         transform.position = targetTransform.position;
         transform.rotation = targetTransform.rotation;
     }
+
+    #endregion
 }

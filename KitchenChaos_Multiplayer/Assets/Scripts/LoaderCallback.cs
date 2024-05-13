@@ -1,18 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class LoaderCallback : MonoBehaviour {
-
+public class LoaderCallback : MonoBehaviour
+{
+    #region Fields
 
     private bool isFirstUpdate = true;
 
-    private void Update() {
-        if (isFirstUpdate) {
+    #endregion
+
+    #region Unity: Update
+
+    private void Update()
+    {
+        if (isFirstUpdate)
+        {
             isFirstUpdate = false;
 
             Loader.LoaderCallback();
         }
     }
 
+    #endregion
 }

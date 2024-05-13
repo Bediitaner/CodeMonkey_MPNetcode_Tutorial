@@ -1,40 +1,73 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlateKitchenObject : KitchenObject {
+public class OnIngredientAddedEventArgs : EventArgs
+{
+    public KitchenObjectSO kitchenObjectSO;
+}
 
+public class PlateKitchenObject : KitchenObject
+{
+    #region Events
 
     public event EventHandler<OnIngredientAddedEventArgs> OnIngredientAdded;
-    public class OnIngredientAddedEventArgs : EventArgs {
-        public KitchenObjectSO kitchenObjectSO;
-    }
 
+    #endregion
+
+    #region Contents
 
     [SerializeField] private List<KitchenObjectSO> validKitchenObjectSOList;
 
+    #endregion
+
+    #region Fields
 
     private List<KitchenObjectSO> kitchenObjectSOList;
 
+    #endregion
 
-    protected override void Awake() {
+    #region Unity: Awake
+
+    protected override void Awake()
+    {
         base.Awake();
         kitchenObjectSOList = new List<KitchenObjectSO>();
     }
 
-    public bool TryAddIngredient(KitchenObjectSO kitchenObjectSO) {
-        if (!validKitchenObjectSOList.Contains(kitchenObjectSO)) {
+    #endregion
+
+    
+    #region Get: KitchenObjectSOList
+
+    public List<KitchenObjectSO> GetKitchenObjectSOList()
+    {
+        return kitchenObjectSOList;
+    }
+
+    #endregion
+    
+    #region TryAdd: Ingredient
+
+    public bool TryAddIngredient(KitchenObjectSO kitchenObjectSO)
+    {
+        if (!validKitchenObjectSOList.Contains(kitchenObjectSO))
+        {
             // Not a valid ingredient
             return false;
         }
-        if (kitchenObjectSOList.Contains(kitchenObjectSO)) {
+
+        if (kitchenObjectSOList.Contains(kitchenObjectSO))
+        {
             // Already has this type
             return false;
-        } else {
+        }
+        else
+        {
             kitchenObjectSOList.Add(kitchenObjectSO);
 
-            OnIngredientAdded?.Invoke(this, new OnIngredientAddedEventArgs {
+            OnIngredientAdded?.Invoke(this, new OnIngredientAddedEventArgs
+            {
                 kitchenObjectSO = kitchenObjectSO
             });
 
@@ -42,8 +75,5 @@ public class PlateKitchenObject : KitchenObject {
         }
     }
 
-    public List<KitchenObjectSO> GetKitchenObjectSOList() {
-        return kitchenObjectSOList;
-    }
-
+    #endregion
 }

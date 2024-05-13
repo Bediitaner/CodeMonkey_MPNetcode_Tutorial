@@ -1,22 +1,34 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class DeliveryManager : NetworkBehaviour
 {
+    #region Singleton
+
+    public static DeliveryManager Instance { get; private set; }
+
+    #endregion
+
+
+    #region Events
+
     public event EventHandler OnRecipeSpawned;
     public event EventHandler OnRecipeCompleted;
     public event EventHandler OnRecipeSuccess;
     public event EventHandler OnRecipeFailed;
 
+    #endregion
 
-    public static DeliveryManager Instance { get; private set; }
-
+    #region Contents
 
     [SerializeField] private RecipeListSO recipeListSO;
 
+    #endregion
+
+    #region Fields
 
     private List<RecipeSO> waitingRecipeSOList;
     private float spawnRecipeTimer = 4f;
@@ -24,6 +36,10 @@ public class DeliveryManager : NetworkBehaviour
     private int waitingRecipesMax = 4;
     private int successfulRecipesAmount;
 
+    #endregion
+
+
+    #region Unity: Awake | Start
 
     private void Awake()
     {
@@ -39,7 +55,17 @@ public class DeliveryManager : NetworkBehaviour
         {
             return;
         }
+        
+        SpawnNewWaitingRecipe();
+    }
 
+    #endregion
+
+    
+    #region Spawn: NewWaitingRecipe
+
+    private void SpawnNewWaitingRecipe()
+    {
         spawnRecipeTimer -= Time.deltaTime;
         if (spawnRecipeTimer <= 0f)
         {
@@ -47,13 +73,16 @@ public class DeliveryManager : NetworkBehaviour
 
             if (KitchenGameManager.Instance.IsGamePlaying() && waitingRecipeSOList.Count < waitingRecipesMax)
             {
-                var waitingRecipeSOIndex = UnityEngine.Random.Range(0, recipeListSO.recipeSOList.Count);
-                
+                var waitingRecipeSOIndex = Random.Range(0, recipeListSO.recipeSOList.Count);
+
                 SpawnNewWaitingRecipeClientRpc(waitingRecipeSOIndex);
-                
             }
         }
     }
+
+    #endregion
+
+    #region ClienRpc: Spawn: NewWaitingRecipe
 
     [ClientRpc]
     private void SpawnNewWaitingRecipeClientRpc(int waitingRecipeSOIndex)
@@ -63,6 +92,11 @@ public class DeliveryManager : NetworkBehaviour
 
         OnRecipeSpawned?.Invoke(this, EventArgs.Empty);
     }
+
+    #endregion
+
+
+    #region Deliver: Recipe
 
     public void DeliverRecipe(PlateKitchenObject plateKitchenObject)
     {
@@ -110,26 +144,20 @@ public class DeliveryManager : NetworkBehaviour
         // Player did not deliver a correct recipe
         DeliverIncorrectRecipeServerRpc();
     }
-    
-    
-    [ServerRpc(RequireOwnership = false)]
-    private void DeliverIncorrectRecipeServerRpc()
-    {
-        DeliverIncorrectRecipeClientRpc();
-    }
-    
-    [ClientRpc]
-    private void DeliverIncorrectRecipeClientRpc()
-    {
-        OnRecipeFailed?.Invoke(this, EventArgs.Empty);
-    }
-    
-    
+
+    #endregion
+
+    #region ServerRpc: Deliver: CorrectRecipe
+
     [ServerRpc(RequireOwnership = false)]
     private void DeliverCorrectRecipeServerRpc(int waitingRecipeSOIndex)
     {
         DeliverCorrectRecipeClientRpc(waitingRecipeSOIndex);
     }
+
+    #endregion
+
+    #region ClientRpc: Deliver: CorrectRecipe
 
     [ClientRpc]
     private void DeliverCorrectRecipeClientRpc(int waitingRecipeSOIndex)
@@ -142,13 +170,44 @@ public class DeliveryManager : NetworkBehaviour
         OnRecipeSuccess?.Invoke(this, EventArgs.Empty);
     }
 
+    #endregion
+    
+    #region ServerRpc: Deliver: IncorrectRecipe
+
+    [ServerRpc(RequireOwnership = false)]
+    private void DeliverIncorrectRecipeServerRpc()
+    {
+        DeliverIncorrectRecipeClientRpc();
+    }
+
+    #endregion
+    
+    #region ClientRpc: Deliver: IncorrectRecipe
+
+    [ClientRpc]
+    private void DeliverIncorrectRecipeClientRpc()
+    {
+        OnRecipeFailed?.Invoke(this, EventArgs.Empty);
+    }
+
+    #endregion
+
+
+    #region Get: WaitingRecipeSOList
+
     public List<RecipeSO> GetWaitingRecipeSOList()
     {
         return waitingRecipeSOList;
     }
 
+    #endregion
+
+    #region Get: SuccessfulRecipesAmount
+
     public int GetSuccessfulRecipesAmount()
     {
         return successfulRecipesAmount;
     }
+
+    #endregion
 }

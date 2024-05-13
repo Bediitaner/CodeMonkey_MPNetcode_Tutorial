@@ -49,7 +49,7 @@ namespace UI
         
         #region Event: OnIngredientAdded
 
-        private void OnIngredientAdded(object sender, PlateKitchenObject.OnIngredientAddedEventArgs e)
+        private void OnIngredientAdded(object sender, OnIngredientAddedEventArgs e)
         {
             UpdateUI();
         }

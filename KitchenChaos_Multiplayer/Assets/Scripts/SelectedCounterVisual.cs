@@ -1,20 +1,24 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Counters;
 using UnityEngine;
 
-public class SelectedCounterVisual : MonoBehaviour {
-
+public class SelectedCounterVisual : MonoBehaviour
+{
+    #region Contents
 
     [SerializeField] private BaseCounter baseCounter;
     [SerializeField] private GameObject[] visualGameObjectArray;
 
+    #endregion
 
-    private void Start() {
+
+    #region Unity: Start
+
+    private void Start()
+    {
         if (Player.LocalInstance != null)
         {
-            Player.LocalInstance.OnSelectedCounterChanged += Player_OnSelectedCounterChanged;
+            Player.LocalInstance.OnSelectedCounterChanged += OnSelectedCounterChanged;
         }
         else
         {
@@ -22,33 +26,55 @@ public class SelectedCounterVisual : MonoBehaviour {
         }
     }
 
+    #endregion
+
+
+    #region Event: OnAnyPlayerSpawned
+
     private void OnAnyPlayerSpawned(object sender, EventArgs e)
     {
         if (Player.LocalInstance != null)
         {
-            Player.LocalInstance.OnSelectedCounterChanged -= Player_OnSelectedCounterChanged;
-            Player.LocalInstance.OnSelectedCounterChanged += Player_OnSelectedCounterChanged;
+            Player.LocalInstance.OnSelectedCounterChanged -= OnSelectedCounterChanged;
+            Player.LocalInstance.OnSelectedCounterChanged += OnSelectedCounterChanged;
         }
     }
 
-    private void Player_OnSelectedCounterChanged(object sender, Player.OnSelectedCounterChangedEventArgs e) {
-        if (e.selectedCounter == baseCounter) {
+    #endregion
+
+    #region Event: OnSelectedCounterChanged
+
+    private void OnSelectedCounterChanged(object sender, OnSelectedCounterChangedEventArgs e)
+    {
+        if (e.selectedCounter == baseCounter)
+        {
             Show();
-        } else {
+        }
+        else
+        {
             Hide();
         }
     }
 
-    private void Show() {
-        foreach (GameObject visualGameObject in visualGameObjectArray) {
+    #endregion
+
+    #region Show | Hide
+
+    private void Show()
+    {
+        foreach (GameObject visualGameObject in visualGameObjectArray)
+        {
             visualGameObject.SetActive(true);
         }
     }
 
-    private void Hide() {
-        foreach (GameObject visualGameObject in visualGameObjectArray) {
+    private void Hide()
+    {
+        foreach (GameObject visualGameObject in visualGameObjectArray)
+        {
             visualGameObject.SetActive(false);
         }
     }
 
+    #endregion
 }

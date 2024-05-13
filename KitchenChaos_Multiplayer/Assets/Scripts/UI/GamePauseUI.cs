@@ -20,7 +20,7 @@ namespace UI
         private void Awake()
         {
             resumeButton.onClick.AddListener(() => { KitchenGameManager.Instance.TogglePauseGame(); });
-            mainMenuButton.onClick.AddListener(() => { Loader.Load(Loader.Scene.MainMenuScene); });
+            mainMenuButton.onClick.AddListener(() => { Loader.Load(Scene.MainMenuScene); });
             optionsButton.onClick.AddListener(() =>
             {
                 Hide();
