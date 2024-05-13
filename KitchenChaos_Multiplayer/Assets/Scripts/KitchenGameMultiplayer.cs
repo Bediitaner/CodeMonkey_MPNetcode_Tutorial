@@ -74,4 +74,42 @@ public class KitchenGameMultiplayer : NetworkBehaviour
     }
 
     #endregion
+
+
+    #region Destroy: KitchenObject
+
+    public void DestroyKitchenObject(KitchenObject kitchenObject)
+    {
+        DestroyKitchenObjectServerRpc(kitchenObject.NetworkObject);
+    }
+
+    #endregion
+
+    #region ServerRpc: Destroy: KitchenObject
+
+    [ServerRpc(RequireOwnership = false)]
+    private void DestroyKitchenObjectServerRpc(NetworkObjectReference kitchenObjectNetworkObjectReference)
+    {
+        kitchenObjectNetworkObjectReference.TryGet(out NetworkObject kitchenObjectNetworkObject);
+        KitchenObject kitchenObject = kitchenObjectNetworkObject.GetComponent<KitchenObject>();
+
+        ClearKitchenObjectOnParentClientRpc(kitchenObject.NetworkObject);
+
+        kitchenObject.DestroySelf();
+    }
+
+    #endregion
+
+    #region ClientRpc: Clear: KitchenObject
+
+    [ClientRpc]
+    private void ClearKitchenObjectOnParentClientRpc(NetworkObjectReference kitchenObjectNetworkObjectReference)
+    {
+        kitchenObjectNetworkObjectReference.TryGet(out NetworkObject kitchenObjectNetworkObject);
+        KitchenObject kitchenObject = kitchenObjectNetworkObject.GetComponent<KitchenObject>();
+        
+        kitchenObject.ClearKitchenObjectParent();
+    }
+
+    #endregion
 }

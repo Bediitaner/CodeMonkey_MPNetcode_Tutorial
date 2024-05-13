@@ -62,6 +62,8 @@ namespace UI
 
         private void Start()
         {
+            KitchenGameManager.Instance.OnGameUnpaused += OnGameUnpaused;
+
             UpdateUI();
 
             HidePressToRebindKey();
@@ -180,8 +182,6 @@ namespace UI
             gamepadInteractButton.onClick.AddListener(() => { RebindBinding(Binding.Gamepad_Interact); });
             gamepadInteractAlternateButton.onClick.AddListener(() => { RebindBinding(Binding.Gamepad_InteractAlternate); });
             gamepadPauseButton.onClick.AddListener(() => { RebindBinding(Binding.Gamepad_Pause); });
-
-            KitchenGameManager.Instance.OnGameUnpaused += OnGameUnpaused;
         }
 
         private void RemoveEvents()

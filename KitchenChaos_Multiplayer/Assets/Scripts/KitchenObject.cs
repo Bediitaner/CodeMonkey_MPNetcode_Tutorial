@@ -28,14 +28,13 @@ public class KitchenObject : NetworkBehaviour
 
     #endregion
 
-    
+
     #region Get: KitchenObjectSO
 
     public KitchenObjectSO GetKitchenObjectSO()
     {
         return kitchenObjectSO;
     }
-    
 
     #endregion
 
@@ -48,7 +47,7 @@ public class KitchenObject : NetworkBehaviour
 
     #endregion
 
-    
+
     #region Set: KitchenObjectParent
 
     public void SetKitchenObjectParent(IKitchenObjectParent kitchenObjectParent)
@@ -57,7 +56,7 @@ public class KitchenObject : NetworkBehaviour
     }
 
     #endregion
-    
+
     #region ServerRpc: Set: KitchenObjectParent
 
     [ServerRpc(RequireOwnership = false)]
@@ -96,17 +95,25 @@ public class KitchenObject : NetworkBehaviour
 
     #endregion
 
-    
+
     #region Destroy: Self
 
     public void DestroySelf()
     {
-        kitchenObjectParent.ClearKitchenObject();
-
         Destroy(gameObject);
     }
 
     #endregion
+
+    #region Clear: KitchenObjectParent
+
+    public void ClearKitchenObjectParent()
+    {
+        kitchenObjectParent.ClearKitchenObject();
+    }
+
+    #endregion
+
 
     #region TryGet: Plate
 
@@ -132,6 +139,15 @@ public class KitchenObject : NetworkBehaviour
     public static void SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenObjectParent kitchenObjectParent)
     {
         KitchenGameMultiplayer.Instance.SpawnKitchenObject(kitchenObjectSO, kitchenObjectParent);
+    }
+
+    #endregion
+
+    #region Destroy: KitchenObject
+
+    public static void DestroyKitchenObject(KitchenObject kitchenObject)
+    {
+        KitchenGameMultiplayer.Instance.DestroyKitchenObject(kitchenObject);
     }
 
     #endregion
