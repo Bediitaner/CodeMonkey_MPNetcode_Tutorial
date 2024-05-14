@@ -28,6 +28,7 @@ namespace Counters
 
         private void Start()
         {
+            AddEvents();
         }
 
         #endregion
