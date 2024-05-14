@@ -28,7 +28,7 @@ namespace Counters
         private void OnStateChanged(object sender, StoveCounter.OnStateChangedEventArgs e)
         {
             bool showVisual = e.state == State.Frying || e.state == State.Fried;
-            stoveOnGameObject.SetActive(showVisual);
+                stoveOnGameObject.SetActive(showVisual);
             particlesGameObject.SetActive(showVisual);
         }
 

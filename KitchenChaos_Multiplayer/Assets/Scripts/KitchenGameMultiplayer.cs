@@ -59,7 +59,7 @@ public class KitchenGameMultiplayer : NetworkBehaviour
 
     #region Get: KitchenObjectSO: Index
 
-    private int GetKitchenObjectSOIndex(KitchenObjectSO kitchenObjectSO)
+    public int GetKitchenObjectSOIndex(KitchenObjectSO kitchenObjectSO)
     {
         return kitchenObjectListSO.kitchenObjectSOList.IndexOf(kitchenObjectSO);
     }
@@ -68,7 +68,7 @@ public class KitchenGameMultiplayer : NetworkBehaviour
 
     #region Get: KitchenObjectSO: From: Index
 
-    private KitchenObjectSO GetKitchenObjectSOFromIndex(int index)
+    public KitchenObjectSO GetKitchenObjectSOFromIndex(int index)
     {
         return kitchenObjectListSO.kitchenObjectSOList[index];
     }
