@@ -57,7 +57,7 @@ namespace UI
 
         #region Event: OnGameUnpaused
 
-        private void OnGameUnpaused(object sender, EventArgs e)
+        private void GameUnpausedEvent(object sender, EventArgs e)
         {
             Hide();
         }
@@ -66,7 +66,7 @@ namespace UI
 
         #region Event: OnGamePaused
 
-        private void OnGamePaused(object sender, EventArgs e)
+        private void GamePausedEvent(object sender, EventArgs e)
         {
             Show();
         }
@@ -77,14 +77,14 @@ namespace UI
 
         private void AddEvents()
         {
-            KitchenGameManager.Instance.OnGamePaused += OnGamePaused;
-            KitchenGameManager.Instance.OnGameUnpaused += OnGameUnpaused;
+            KitchenGameManager.Instance.OnGamePausedEvent += GamePausedEvent;
+            KitchenGameManager.Instance.OnGameUnpausedEvent += GameUnpausedEvent;
         }
 
         private void RemoveEvents()
         {
-            KitchenGameManager.Instance.OnGamePaused -= OnGamePaused;
-            KitchenGameManager.Instance.OnGameUnpaused -= OnGameUnpaused;
+            KitchenGameManager.Instance.OnGamePausedEvent -= GamePausedEvent;
+            KitchenGameManager.Instance.OnGameUnpausedEvent -= GameUnpausedEvent;
         }
 
         #endregion

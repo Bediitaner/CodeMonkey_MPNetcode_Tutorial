@@ -18,11 +18,11 @@ public class SelectedCounterVisual : MonoBehaviour
     {
         if (Player.LocalInstance != null)
         {
-            Player.LocalInstance.OnSelectedCounterChanged += OnSelectedCounterChanged;
+            Player.LocalInstance.OnSelectedCounterChangedEvent += SelectedCounterChangedEvent;
         }
         else
         {
-            Player.OnAnyPlayerSpawned += OnAnyPlayerSpawned;
+            Player.OnAnyPlayerSpawnedEvent += AnyPlayerSpawnedEvent;
         }
     }
 
@@ -31,12 +31,12 @@ public class SelectedCounterVisual : MonoBehaviour
 
     #region Event: OnAnyPlayerSpawned
 
-    private void OnAnyPlayerSpawned(object sender, EventArgs e)
+    private void AnyPlayerSpawnedEvent(object sender, EventArgs e)
     {
         if (Player.LocalInstance != null)
         {
-            Player.LocalInstance.OnSelectedCounterChanged -= OnSelectedCounterChanged;
-            Player.LocalInstance.OnSelectedCounterChanged += OnSelectedCounterChanged;
+            Player.LocalInstance.OnSelectedCounterChangedEvent -= SelectedCounterChangedEvent;
+            Player.LocalInstance.OnSelectedCounterChangedEvent += SelectedCounterChangedEvent;
         }
     }
 
@@ -44,7 +44,7 @@ public class SelectedCounterVisual : MonoBehaviour
 
     #region Event: OnSelectedCounterChanged
 
-    private void OnSelectedCounterChanged(object sender, OnSelectedCounterChangedEventArgs e)
+    private void SelectedCounterChangedEvent(object sender, OnSelectedCounterChangedEventArgs e)
     {
         if (e.selectedCounter == baseCounter)
         {

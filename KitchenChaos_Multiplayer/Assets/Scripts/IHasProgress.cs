@@ -5,7 +5,7 @@ using UnityEngine;
 
 public interface IHasProgress
 {
-    public event EventHandler<OnProgressChangedEventArgs> OnProgressChanged;
+    public event EventHandler<OnProgressChangedEventArgs> OnProgressChangedEvent;
 
     public class OnProgressChangedEventArgs : EventArgs
     {

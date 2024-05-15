@@ -70,7 +70,7 @@ namespace UI
         
         #region Event: OnStateChanged
 
-        private void OnStateChanged(object sender, EventArgs e)
+        private void StateChangedEvent(object sender, EventArgs e)
         {
             if (KitchenGameManager.Instance.IsCountdownToStartActive())
             {
@@ -80,9 +80,21 @@ namespace UI
 
         #endregion
 
+        #region Event: OnLocalPlayerReadyChanged
+
+        private void LocalPlayerReadyChangedEvent(object sender, EventArgs e)
+        {
+            if (KitchenGameManager.Instance.IsLocalPlayerReady())
+            {
+                Hide();
+            }
+        }
+        
+        #endregion
+
         #region Event: OnKeyBindingChanged
 
-        private void OnBindingRebind(object sender, EventArgs e)
+        private void BindingRebindEvent(object sender, EventArgs e)
         {
             UpdateUI();
         }
@@ -93,14 +105,16 @@ namespace UI
 
         private void AddEvents()
         {
-            GameInput.Instance.OnBindingRebind += OnBindingRebind;
-            KitchenGameManager.Instance.OnStateChanged += OnStateChanged;
+            GameInput.Instance.OnBindingRebindEvent += BindingRebindEvent;
+            KitchenGameManager.Instance.OnStateChangedEvent += StateChangedEvent;
+            KitchenGameManager.Instance.OnLocalPlayerReadyChangedEvent += LocalPlayerReadyChangedEvent;
         }
 
         private void RemoveEvents()
         {
-            GameInput.Instance.OnBindingRebind -= OnBindingRebind;
-            KitchenGameManager.Instance.OnStateChanged -= OnStateChanged;
+            GameInput.Instance.OnBindingRebindEvent -= BindingRebindEvent;
+            KitchenGameManager.Instance.OnStateChangedEvent -= StateChangedEvent;
+            KitchenGameManager.Instance.OnLocalPlayerReadyChangedEvent -= LocalPlayerReadyChangedEvent;
         }
 
         #endregion

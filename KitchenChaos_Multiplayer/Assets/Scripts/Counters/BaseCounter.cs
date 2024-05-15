@@ -8,7 +8,7 @@ namespace Counters
     {
         #region Events
 
-        public static event EventHandler OnAnyObjectPlacedHere;
+        public static event EventHandler OnAnyObjectPlacedHereEvent;
 
         #endregion
 
@@ -29,7 +29,7 @@ namespace Counters
 
         public static void ResetStaticData()
         {
-            OnAnyObjectPlacedHere = null;
+            OnAnyObjectPlacedHereEvent = null;
         }
 
         #endregion
@@ -71,7 +71,7 @@ namespace Counters
 
             if (kitchenObject != null)
             {
-                OnAnyObjectPlacedHere?.Invoke(this, EventArgs.Empty);
+                OnAnyObjectPlacedHereEvent?.Invoke(this, EventArgs.Empty);
             }
         }
 

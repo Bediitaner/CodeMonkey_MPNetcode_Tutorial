@@ -15,10 +15,10 @@ public class DeliveryManager : NetworkBehaviour
 
     #region Events
 
-    public event EventHandler OnRecipeSpawned;
-    public event EventHandler OnRecipeCompleted;
-    public event EventHandler OnRecipeSuccess;
-    public event EventHandler OnRecipeFailed;
+    public event EventHandler OnRecipeSpawnedEvent;
+    public event EventHandler OnRecipeCompletedEvent;
+    public event EventHandler OnRecipeSuccessEvent;
+    public event EventHandler OnRecipeFailedEvent;
 
     #endregion
 
@@ -55,13 +55,13 @@ public class DeliveryManager : NetworkBehaviour
         {
             return;
         }
-        
+
         SpawnNewWaitingRecipe();
     }
 
     #endregion
 
-    
+
     #region Spawn: NewWaitingRecipe
 
     private void SpawnNewWaitingRecipe()
@@ -90,7 +90,7 @@ public class DeliveryManager : NetworkBehaviour
         RecipeSO waitingRecipeSO = recipeListSO.recipeSOList[waitingRecipeSOIndex];
         waitingRecipeSOList.Add(waitingRecipeSO);
 
-        OnRecipeSpawned?.Invoke(this, EventArgs.Empty);
+        OnRecipeSpawnedEvent?.Invoke(this, EventArgs.Empty);
     }
 
     #endregion
@@ -166,12 +166,12 @@ public class DeliveryManager : NetworkBehaviour
 
         waitingRecipeSOList.RemoveAt(waitingRecipeSOIndex);
 
-        OnRecipeCompleted?.Invoke(this, EventArgs.Empty);
-        OnRecipeSuccess?.Invoke(this, EventArgs.Empty);
+        OnRecipeCompletedEvent?.Invoke(this, EventArgs.Empty);
+        OnRecipeSuccessEvent?.Invoke(this, EventArgs.Empty);
     }
 
     #endregion
-    
+
     #region ServerRpc: Deliver: IncorrectRecipe
 
     [ServerRpc(RequireOwnership = false)]
@@ -181,13 +181,13 @@ public class DeliveryManager : NetworkBehaviour
     }
 
     #endregion
-    
+
     #region ClientRpc: Deliver: IncorrectRecipe
 
     [ClientRpc]
     private void DeliverIncorrectRecipeClientRpc()
     {
-        OnRecipeFailed?.Invoke(this, EventArgs.Empty);
+        OnRecipeFailedEvent?.Invoke(this, EventArgs.Empty);
     }
 
     #endregion

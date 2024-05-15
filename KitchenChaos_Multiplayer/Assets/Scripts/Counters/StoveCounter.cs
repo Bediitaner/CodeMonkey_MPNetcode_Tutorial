@@ -8,8 +8,8 @@ namespace Counters
     {
         #region Events
 
-        public event EventHandler<IHasProgress.OnProgressChangedEventArgs> OnProgressChanged;
-        public event EventHandler<OnStateChangedEventArgs> OnStateChanged;
+        public event EventHandler<IHasProgress.OnProgressChangedEventArgs> OnProgressChangedEvent;
+        public event EventHandler<OnStateChangedEventArgs> OnStateChangedEvent;
 
         public class OnStateChangedEventArgs : EventArgs
         {
@@ -283,7 +283,7 @@ namespace Counters
         {
             float fryingTimerMax = fryingRecipeSO != null ? fryingRecipeSO.fryingTimerMax : 1f;
             
-            OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
+            OnProgressChangedEvent?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
             {
                 progressNormalized = fryingTimer.Value / fryingTimerMax
             });
@@ -297,7 +297,7 @@ namespace Counters
         {
             float burningTimerMax = burningRecipeSO != null ? burningRecipeSO.burningTimerMax : 1f;
 
-            OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
+            OnProgressChangedEvent?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
             {
                 progressNormalized = fryingTimer.Value / burningTimerMax
             });
@@ -309,14 +309,14 @@ namespace Counters
 
         private void OnStateValueChanged(State previousvalue, State newvalue)
         {
-            OnStateChanged?.Invoke(this, new OnStateChangedEventArgs
+            OnStateChangedEvent?.Invoke(this, new OnStateChangedEventArgs
             {
                 state = state.Value
             });
 
             if (state.Value == State.Burned || state.Value == State.Idle)
             {
-                OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
+                OnProgressChangedEvent?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
                 {
                     progressNormalized = 0f
                 });

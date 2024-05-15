@@ -8,9 +8,9 @@ namespace Counters
     {
         #region Events
 
-        public static event EventHandler OnAnyCut;
-        public event EventHandler<IHasProgress.OnProgressChangedEventArgs> OnProgressChanged;
-        public event EventHandler OnCut;
+        public static event EventHandler OnAnyCutEvent;
+        public event EventHandler<IHasProgress.OnProgressChangedEventArgs> OnProgressChangedEvent;
+        public event EventHandler OnCutEvent;
 
         #endregion
 
@@ -31,7 +31,7 @@ namespace Counters
 
         new public static void ResetStaticData()
         {
-            OnAnyCut = null;
+            OnAnyCutEvent = null;
         }
 
         #endregion
@@ -116,7 +116,7 @@ namespace Counters
         {
             cuttingProgress = 0;
 
-            OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
+            OnProgressChangedEvent?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
             {
                 progressNormalized = 0f
             });
@@ -143,12 +143,12 @@ namespace Counters
         {
             cuttingProgress++;
 
-            OnCut?.Invoke(this, EventArgs.Empty);
-            OnAnyCut?.Invoke(this, EventArgs.Empty);
+            OnCutEvent?.Invoke(this, EventArgs.Empty);
+            OnAnyCutEvent?.Invoke(this, EventArgs.Empty);
 
             CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
 
-            OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
+            OnProgressChangedEvent?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
             {
                 progressNormalized = (float)cuttingProgress / cuttingRecipeSO.cuttingProgressMax
             });

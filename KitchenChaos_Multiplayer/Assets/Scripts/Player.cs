@@ -14,10 +14,10 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
 {
     #region Events
 
-    public static event EventHandler OnAnyPlayerSpawned;
-    public static event EventHandler OnAnyPickedSomething;
-    public event EventHandler OnPickedSomething;
-    public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
+    public static event EventHandler OnAnyPlayerSpawnedEvent;
+    public static event EventHandler OnAnyPickedSomethingEvent;
+    public event EventHandler OnPickedSomethingEvent;
+    public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChangedEvent;
 
     #endregion
 
@@ -31,7 +31,7 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
 
     public static void ResetStaticData()
     {
-        OnAnyPlayerSpawned = null;
+        OnAnyPlayerSpawnedEvent = null;
     }
 
     #endregion
@@ -89,7 +89,7 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
 
         transform.position = spawnPositionList[(int)OwnerClientId];
         
-        OnAnyPlayerSpawned?.Invoke(this, EventArgs.Empty);
+        OnAnyPlayerSpawnedEvent?.Invoke(this, EventArgs.Empty);
     }
 
     #endregion
@@ -218,7 +218,7 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
     {
         this.selectedCounter = selectedCounter;
 
-        OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs
+        OnSelectedCounterChangedEvent?.Invoke(this, new OnSelectedCounterChangedEventArgs
         {
             selectedCounter = selectedCounter
         });
@@ -234,8 +234,8 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
 
         if (kitchenObject != null)
         {
-            OnPickedSomething?.Invoke(this, EventArgs.Empty);
-            OnAnyPickedSomething?.Invoke(this, EventArgs.Empty);
+            OnPickedSomethingEvent?.Invoke(this, EventArgs.Empty);
+            OnAnyPickedSomethingEvent?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -282,7 +282,7 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
 
     #region Event: OnInteractAlternateAction
 
-    private void OnInteractAlternateAction(object sender, EventArgs e)
+    private void InteractAlternateActionEvent(object sender, EventArgs e)
     {
         if (!KitchenGameManager.Instance.IsGamePlaying()) return;
 
@@ -296,7 +296,7 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
 
     #region Event: OnInteractAction
 
-    private void OnInteractAction(object sender, EventArgs e)
+    private void InteractActionEvent(object sender, EventArgs e)
     {
         if (!KitchenGameManager.Instance.IsGamePlaying()) return;
 
@@ -312,14 +312,14 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
 
     private void AddEvents()
     {
-        GameInput.Instance.OnInteractAction += OnInteractAction;
-        GameInput.Instance.OnInteractAlternateAction += OnInteractAlternateAction;
+        GameInput.Instance.OnInteractActionEvent += InteractActionEvent;
+        GameInput.Instance.OnInteractAlternateActionEvent += InteractAlternateActionEvent;
     }
 
     private void RemoveEvents()
     {
-        GameInput.Instance.OnInteractAction -= OnInteractAction;
-        GameInput.Instance.OnInteractAlternateAction -= OnInteractAlternateAction;
+        GameInput.Instance.OnInteractActionEvent -= InteractActionEvent;
+        GameInput.Instance.OnInteractAlternateActionEvent -= InteractAlternateActionEvent;
     }
 
     #endregion

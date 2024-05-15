@@ -52,7 +52,7 @@ namespace UI
         
         #region Event: OnRecipeCompleted
 
-        private void OnRecipeCompleted(object sender, EventArgs e)
+        private void RecipeCompletedEvent(object sender, EventArgs e)
         {
             UpdateUI();
         }
@@ -61,7 +61,7 @@ namespace UI
 
         #region Event: OnRecipeSpawned
 
-        private void OnRecipeSpawned(object sender, EventArgs e)
+        private void RecipeSpawnedEvent(object sender, EventArgs e)
         {
             UpdateUI();
         }
@@ -72,14 +72,14 @@ namespace UI
 
         private void AddEvents()
         {
-            DeliveryManager.Instance.OnRecipeSpawned += OnRecipeSpawned;
-            DeliveryManager.Instance.OnRecipeCompleted += OnRecipeCompleted;
+            DeliveryManager.Instance.OnRecipeSpawnedEvent += RecipeSpawnedEvent;
+            DeliveryManager.Instance.OnRecipeCompletedEvent += RecipeCompletedEvent;
         }
         
         private void RemoveEvents()
         {
-            DeliveryManager.Instance.OnRecipeSpawned -= OnRecipeSpawned;
-            DeliveryManager.Instance.OnRecipeCompleted -= OnRecipeCompleted;
+            DeliveryManager.Instance.OnRecipeSpawnedEvent -= RecipeSpawnedEvent;
+            DeliveryManager.Instance.OnRecipeCompletedEvent -= RecipeCompletedEvent;
         }
 
         #endregion

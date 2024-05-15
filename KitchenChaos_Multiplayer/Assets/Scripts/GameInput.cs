@@ -26,10 +26,10 @@ public class GameInput : MonoBehaviour
 
     #region Events
 
-    public event EventHandler OnInteractAction;
-    public event EventHandler OnInteractAlternateAction;
-    public event EventHandler OnPauseAction;
-    public event EventHandler OnBindingRebind;
+    public event EventHandler OnInteractActionEvent;
+    public event EventHandler OnInteractAlternateActionEvent;
+    public event EventHandler OnPauseActionEvent;
+    public event EventHandler OnBindingRebindEvent;
 
     #endregion
 
@@ -181,7 +181,7 @@ public class GameInput : MonoBehaviour
                 PlayerPrefs.SetString(PLAYER_PREFS_BINDINGS, playerInputActions.SaveBindingOverridesAsJson());
                 PlayerPrefs.Save();
 
-                OnBindingRebind?.Invoke(this, EventArgs.Empty);
+                OnBindingRebindEvent?.Invoke(this, EventArgs.Empty);
             })
             .Start();
     }
@@ -193,7 +193,7 @@ public class GameInput : MonoBehaviour
 
     private void OnPausePerformed(InputAction.CallbackContext obj)
     {
-        OnPauseAction?.Invoke(this, EventArgs.Empty);
+        OnPauseActionEvent?.Invoke(this, EventArgs.Empty);
     }
 
     #endregion
@@ -202,7 +202,7 @@ public class GameInput : MonoBehaviour
 
     private void OnInteractAlternatePerformed(InputAction.CallbackContext obj)
     {
-        OnInteractAlternateAction?.Invoke(this, EventArgs.Empty);
+        OnInteractAlternateActionEvent?.Invoke(this, EventArgs.Empty);
     }
 
     #endregion
@@ -211,7 +211,7 @@ public class GameInput : MonoBehaviour
 
     private void OnInteractPerformed(InputAction.CallbackContext obj)
     {
-        OnInteractAction?.Invoke(this, EventArgs.Empty);
+        OnInteractActionEvent?.Invoke(this, EventArgs.Empty);
     }
 
     #endregion

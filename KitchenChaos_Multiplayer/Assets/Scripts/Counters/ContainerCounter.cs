@@ -8,7 +8,7 @@ namespace Counters
     {
         #region Events
 
-        public event EventHandler OnPlayerGrabbedObject;
+        public event EventHandler OnPlayerGrabbedObjectEvent;
 
         #endregion
 
@@ -49,7 +49,7 @@ namespace Counters
         [ClientRpc]
         private void InteractLogicClientRpc()
         {
-            OnPlayerGrabbedObject?.Invoke(this, EventArgs.Empty);
+            OnPlayerGrabbedObjectEvent?.Invoke(this, EventArgs.Empty);
         }
 
         #endregion

@@ -46,7 +46,7 @@ namespace UI
         
         #region Event: OnRecipeFailed
 
-        private void OnRecipeFailed(object sender, EventArgs e)
+        private void RecipeFailedEvent(object sender, EventArgs e)
         {
             gameObject.SetActive(true);
             animator.SetTrigger(POPUP);
@@ -58,7 +58,7 @@ namespace UI
 
         #region Event: OnRecipeSuccess
 
-        private void OnRecipeSuccess(object sender, EventArgs e)
+        private void RecipeSuccessEvent(object sender, EventArgs e)
         {
             gameObject.SetActive(true);
             animator.SetTrigger(POPUP);
@@ -74,14 +74,14 @@ namespace UI
 
         private void AddEvents()
         {
-            DeliveryManager.Instance.OnRecipeSuccess += OnRecipeSuccess;
-            DeliveryManager.Instance.OnRecipeFailed += OnRecipeFailed;
+            DeliveryManager.Instance.OnRecipeSuccessEvent += RecipeSuccessEvent;
+            DeliveryManager.Instance.OnRecipeFailedEvent += RecipeFailedEvent;
         }
         
         private void RemoveEvents()
         {
-            DeliveryManager.Instance.OnRecipeSuccess -= OnRecipeSuccess;
-            DeliveryManager.Instance.OnRecipeFailed -= OnRecipeFailed;
+            DeliveryManager.Instance.OnRecipeSuccessEvent -= RecipeSuccessEvent;
+            DeliveryManager.Instance.OnRecipeFailedEvent -= RecipeFailedEvent;
         }
 
         #endregion

@@ -12,7 +12,7 @@ public class PlateKitchenObject : KitchenObject
 {
     #region Events
 
-    public event EventHandler<OnIngredientAddedEventArgs> OnIngredientAdded;
+    public event EventHandler<OnIngredientAddedEventArgs> OnIngredientAddedEvent;
 
     #endregion
 
@@ -92,7 +92,7 @@ public class PlateKitchenObject : KitchenObject
         
         kitchenObjectSOList.Add(kitchenObjectSO);
 
-        OnIngredientAdded?.Invoke(this, new OnIngredientAddedEventArgs
+        OnIngredientAddedEvent?.Invoke(this, new OnIngredientAddedEventArgs
         {
             kitchenObjectSO = kitchenObjectSO
         });

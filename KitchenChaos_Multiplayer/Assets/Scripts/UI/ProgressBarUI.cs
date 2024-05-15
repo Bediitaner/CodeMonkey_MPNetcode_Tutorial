@@ -75,12 +75,12 @@ namespace UI
 
         private void AddEvents()
         {
-            hasProgress.OnProgressChanged += OnProgressChanged; 
+            hasProgress.OnProgressChangedEvent += OnProgressChanged; 
         }
 
         private void RemoveEvents()
         {
-            hasProgress.OnProgressChanged -= OnProgressChanged;
+            hasProgress.OnProgressChangedEvent -= OnProgressChanged;
         }
 
         #endregion

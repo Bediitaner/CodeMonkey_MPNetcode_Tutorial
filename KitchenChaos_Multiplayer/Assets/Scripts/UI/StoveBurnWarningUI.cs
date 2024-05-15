@@ -61,12 +61,12 @@ namespace UI
 
         private void AddEvents()
         {
-            stoveCounter.OnProgressChanged += OnProgressChanged;
+            stoveCounter.OnProgressChangedEvent += OnProgressChanged;
         }
 
         private void RemoveEvents()
         {
-            stoveCounter.OnProgressChanged -= OnProgressChanged;
+            stoveCounter.OnProgressChangedEvent -= OnProgressChanged;
         }
 
         #endregion

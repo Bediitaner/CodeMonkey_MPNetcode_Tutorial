@@ -49,7 +49,7 @@ namespace UI
         
         #region Event: OnIngredientAdded
 
-        private void OnIngredientAdded(object sender, OnIngredientAddedEventArgs e)
+        private void IngredientAddedEvent(object sender, OnIngredientAddedEventArgs e)
         {
             UpdateUI();
         }
@@ -60,12 +60,12 @@ namespace UI
 
         private void AddEvents()
         {
-            plateKitchenObject.OnIngredientAdded += OnIngredientAdded;
+            plateKitchenObject.OnIngredientAddedEvent += IngredientAddedEvent;
         }
 
         private void RemoveEvents()
         {
-            plateKitchenObject.OnIngredientAdded -= OnIngredientAdded;
+            plateKitchenObject.OnIngredientAddedEvent -= IngredientAddedEvent;
         }
 
         #endregion

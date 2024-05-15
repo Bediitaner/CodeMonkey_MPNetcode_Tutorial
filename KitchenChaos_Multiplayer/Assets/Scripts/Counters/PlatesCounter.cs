@@ -8,8 +8,8 @@ namespace Counters
     {
         #region Events
 
-        public event EventHandler OnPlateSpawned;
-        public event EventHandler OnPlateRemoved;
+        public event EventHandler OnPlateSpawnedEvent;
+        public event EventHandler OnPlateRemovedEvent;
 
         #endregion
 
@@ -79,7 +79,7 @@ namespace Counters
         {
             platesSpawnedAmount++;
 
-            OnPlateSpawned?.Invoke(this, EventArgs.Empty);
+            OnPlateSpawnedEvent?.Invoke(this, EventArgs.Empty);
         }
 
         #endregion
@@ -119,7 +119,7 @@ namespace Counters
         {
             platesSpawnedAmount--;
 
-            OnPlateRemoved?.Invoke(this, EventArgs.Empty);
+            OnPlateRemovedEvent?.Invoke(this, EventArgs.Empty);
         }
 
         #endregion

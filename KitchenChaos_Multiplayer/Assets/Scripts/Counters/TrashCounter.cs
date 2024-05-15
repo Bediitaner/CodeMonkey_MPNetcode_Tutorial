@@ -7,7 +7,7 @@ namespace Counters
     {
         #region Events
 
-        public static event EventHandler OnAnyObjectTrashed;
+        public static event EventHandler OnAnyObjectTrashedEvent;
 
         #endregion
 
@@ -15,7 +15,7 @@ namespace Counters
 
         new public static void ResetStaticData()
         {
-            OnAnyObjectTrashed = null;
+            OnAnyObjectTrashedEvent = null;
         }
 
         #endregion
@@ -50,7 +50,7 @@ namespace Counters
         [ClientRpc]
         public void InteractLogicClientRpc()
         {
-            OnAnyObjectTrashed?.Invoke(this, EventArgs.Empty);
+            OnAnyObjectTrashedEvent?.Invoke(this, EventArgs.Empty);
         }
 
         #endregion

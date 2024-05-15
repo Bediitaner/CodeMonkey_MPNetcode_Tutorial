@@ -37,7 +37,7 @@ namespace Counters
 
         #region Event: OnPlateSpawned
 
-        private void OnPlateSpawned(object sender, EventArgs e)
+        private void PlateSpawnedEvent(object sender, EventArgs e)
         {
             Transform plateVisualTransform = Instantiate(plateVisualPrefab, counterTopPoint);
 
@@ -51,7 +51,7 @@ namespace Counters
 
         #region Event: OnPlateRemoved
 
-        private void OnPlateRemoved(object sender, EventArgs e)
+        private void PlateRemovedEvent(object sender, EventArgs e)
         {
             GameObject plateGameObject = plateVisualGameObjectList[plateVisualGameObjectList.Count - 1];
             plateVisualGameObjectList.Remove(plateGameObject);
@@ -64,14 +64,14 @@ namespace Counters
 
         private void AddEvents()
         {
-            platesCounter.OnPlateSpawned += OnPlateSpawned;
-            platesCounter.OnPlateRemoved += OnPlateRemoved;
+            platesCounter.OnPlateSpawnedEvent += PlateSpawnedEvent;
+            platesCounter.OnPlateRemovedEvent += PlateRemovedEvent;
         }
 
         private void RemoveEvents()
         {
-            platesCounter.OnPlateSpawned -= OnPlateSpawned;
-            platesCounter.OnPlateRemoved -= OnPlateRemoved;
+            platesCounter.OnPlateSpawnedEvent -= PlateSpawnedEvent;
+            platesCounter.OnPlateRemovedEvent -= PlateRemovedEvent;
         }
 
         #endregion

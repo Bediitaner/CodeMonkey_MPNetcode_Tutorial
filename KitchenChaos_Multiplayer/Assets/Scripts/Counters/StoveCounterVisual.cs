@@ -25,7 +25,7 @@ namespace Counters
         
         #region Event: OnStateChanged
 
-        private void OnStateChanged(object sender, StoveCounter.OnStateChangedEventArgs e)
+        private void StateChangedEvent(object sender, StoveCounter.OnStateChangedEventArgs e)
         {
             bool showVisual = e.state == State.Frying || e.state == State.Fried;
                 stoveOnGameObject.SetActive(showVisual);
@@ -38,12 +38,12 @@ namespace Counters
 
         private void AddEvents()
         {
-            stoveCounter.OnStateChanged += OnStateChanged;
+            stoveCounter.OnStateChangedEvent += StateChangedEvent;
         }
 
         private void RemoveEvents()
         {
-            stoveCounter.OnStateChanged -= OnStateChanged;
+            stoveCounter.OnStateChangedEvent -= StateChangedEvent;
         }
 
         #endregion

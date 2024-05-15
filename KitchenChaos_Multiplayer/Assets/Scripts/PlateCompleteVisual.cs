@@ -35,7 +35,7 @@ public class PlateCompleteVisual : MonoBehaviour
 
     #region Event: OnIngredientAdded
 
-    private void OnIngredientAdded(object sender, OnIngredientAddedEventArgs e)
+    private void IngredientAddedEvent(object sender, OnIngredientAddedEventArgs e)
     {
         foreach (KitchenObjectSO_GameObject kitchenObjectSOGameObject in kitchenObjectSOGameObjectList)
         {
@@ -52,7 +52,7 @@ public class PlateCompleteVisual : MonoBehaviour
 
     private void AddEvents()
     {
-        plateKitchenObject.OnIngredientAdded += OnIngredientAdded;
+        plateKitchenObject.OnIngredientAddedEvent += IngredientAddedEvent;
     }
 
     private void RemoveEvents()

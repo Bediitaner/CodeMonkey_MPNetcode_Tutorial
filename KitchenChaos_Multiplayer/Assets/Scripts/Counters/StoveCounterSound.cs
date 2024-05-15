@@ -61,7 +61,7 @@ namespace Counters
 
         #region Event: OnStateChanged
 
-        private void OnStateChanged(object sender, StoveCounter.OnStateChangedEventArgs e)
+        private void StateChangedEvent(object sender, StoveCounter.OnStateChangedEventArgs e)
         {
             bool playSound = e.state == State.Frying || e.state == State.Fried;
             if (playSound)
@@ -81,14 +81,14 @@ namespace Counters
 
         private void AddEvents()
         {
-            stoveCounter.OnProgressChanged += OnProgressChanged;
-            stoveCounter.OnStateChanged += OnStateChanged;
+            stoveCounter.OnProgressChangedEvent += OnProgressChanged;
+            stoveCounter.OnStateChangedEvent += StateChangedEvent;
         }
 
         private void RemoveEvents()
         {
-            stoveCounter.OnProgressChanged -= OnProgressChanged;
-            stoveCounter.OnStateChanged -= OnStateChanged;
+            stoveCounter.OnProgressChangedEvent -= OnProgressChanged;
+            stoveCounter.OnStateChangedEvent -= StateChangedEvent;
         }
         
         #endregion
