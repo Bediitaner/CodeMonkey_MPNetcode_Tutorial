@@ -32,7 +32,7 @@ namespace UI
 
         #region Event: OnLocalPlayerReadyChanged
 
-        private void LocalPlayerReadyChangedEvent(object sender, EventArgs e)
+        private void OnLocalPlayerReadyChanged(object sender, EventArgs e)
         {
             if (KitchenGameManager.Instance.IsLocalPlayerReady())
             {
@@ -58,14 +58,14 @@ namespace UI
 
         private void AddEvents()
         {
-            KitchenGameManager.Instance.OnLocalPlayerReadyChangedEvent += LocalPlayerReadyChangedEvent;
+            KitchenGameManager.Instance.OnLocalPlayerReadyChangedEvent += OnLocalPlayerReadyChanged;
             KitchenGameManager.Instance.OnStateChangedEvent += OnStateChanged;
         }
 
         private void RemoveEvents()
         {
             KitchenGameManager.Instance.OnStateChangedEvent -= OnStateChanged;
-            KitchenGameManager.Instance.OnLocalPlayerReadyChangedEvent -= LocalPlayerReadyChangedEvent;
+            KitchenGameManager.Instance.OnLocalPlayerReadyChangedEvent -= OnLocalPlayerReadyChanged;
         }
 
         #endregion

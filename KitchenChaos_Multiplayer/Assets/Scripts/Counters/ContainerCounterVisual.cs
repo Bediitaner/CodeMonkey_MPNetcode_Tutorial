@@ -36,7 +36,7 @@ namespace Counters
 
         #region Event: OnPlayerGrabbedObject
 
-        private void PlayerGrabbedObjectEvent(object sender, EventArgs e)
+        private void OnPlayerGrabbedObject(object sender, EventArgs e)
         {
             animator.SetTrigger(OPEN_CLOSE);
         }
@@ -48,12 +48,12 @@ namespace Counters
 
         private void AddEvents()
         {
-            containerCounter.OnPlayerGrabbedObjectEvent += PlayerGrabbedObjectEvent;
+            containerCounter.OnPlayerGrabbedObjectEvent += OnPlayerGrabbedObject;
         }
 
         private void RemoveEvents()
         {
-            containerCounter.OnPlayerGrabbedObjectEvent -= PlayerGrabbedObjectEvent;
+            containerCounter.OnPlayerGrabbedObjectEvent -= OnPlayerGrabbedObject;
         }
 
         #endregion

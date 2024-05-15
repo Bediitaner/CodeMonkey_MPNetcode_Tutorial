@@ -62,7 +62,7 @@ namespace UI
 
         private void Start()
         {
-            KitchenGameManager.Instance.OnGameUnpausedEvent += GameUnpausedEvent;
+            KitchenGameManager.Instance.OnLocalGameUnpausedEvent += OnLocalGameUnpaused;
 
             UpdateUI();
 
@@ -145,7 +145,7 @@ namespace UI
 
         #region Event: OnGameUnpaused
 
-        private void GameUnpausedEvent(object sender, EventArgs e)
+        private void OnLocalGameUnpaused(object sender, EventArgs e)
         {
             Hide();
         }
@@ -186,7 +186,7 @@ namespace UI
 
         private void RemoveEvents()
         {
-            KitchenGameManager.Instance.OnGameUnpausedEvent -= GameUnpausedEvent;
+            KitchenGameManager.Instance.OnLocalGameUnpausedEvent -= OnLocalGameUnpaused;
         }
 
         #endregion

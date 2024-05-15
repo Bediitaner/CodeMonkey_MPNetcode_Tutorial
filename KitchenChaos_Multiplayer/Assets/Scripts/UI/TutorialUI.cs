@@ -70,7 +70,7 @@ namespace UI
         
         #region Event: OnStateChanged
 
-        private void StateChangedEvent(object sender, EventArgs e)
+        private void OnStateChanged(object sender, EventArgs e)
         {
             if (KitchenGameManager.Instance.IsCountdownToStartActive())
             {
@@ -82,7 +82,7 @@ namespace UI
 
         #region Event: OnLocalPlayerReadyChanged
 
-        private void LocalPlayerReadyChangedEvent(object sender, EventArgs e)
+        private void OnLocalPlayerReadyChanged(object sender, EventArgs e)
         {
             if (KitchenGameManager.Instance.IsLocalPlayerReady())
             {
@@ -94,7 +94,7 @@ namespace UI
 
         #region Event: OnKeyBindingChanged
 
-        private void BindingRebindEvent(object sender, EventArgs e)
+        private void OnBindingRebind(object sender, EventArgs e)
         {
             UpdateUI();
         }
@@ -105,16 +105,16 @@ namespace UI
 
         private void AddEvents()
         {
-            GameInput.Instance.OnBindingRebindEvent += BindingRebindEvent;
-            KitchenGameManager.Instance.OnStateChangedEvent += StateChangedEvent;
-            KitchenGameManager.Instance.OnLocalPlayerReadyChangedEvent += LocalPlayerReadyChangedEvent;
+            GameInput.Instance.OnBindingRebindEvent += OnBindingRebind;
+            KitchenGameManager.Instance.OnStateChangedEvent += OnStateChanged;
+            KitchenGameManager.Instance.OnLocalPlayerReadyChangedEvent += OnLocalPlayerReadyChanged;
         }
 
         private void RemoveEvents()
         {
-            GameInput.Instance.OnBindingRebindEvent -= BindingRebindEvent;
-            KitchenGameManager.Instance.OnStateChangedEvent -= StateChangedEvent;
-            KitchenGameManager.Instance.OnLocalPlayerReadyChangedEvent -= LocalPlayerReadyChangedEvent;
+            GameInput.Instance.OnBindingRebindEvent -= OnBindingRebind;
+            KitchenGameManager.Instance.OnStateChangedEvent -= OnStateChanged;
+            KitchenGameManager.Instance.OnLocalPlayerReadyChangedEvent -= OnLocalPlayerReadyChanged;
         }
 
         #endregion

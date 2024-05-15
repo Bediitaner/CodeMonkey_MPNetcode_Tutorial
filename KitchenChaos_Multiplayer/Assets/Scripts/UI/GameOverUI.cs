@@ -49,7 +49,7 @@ namespace UI
         
         #region Event: OnStateChanged
 
-        private void StateChangedEvent(object sender, EventArgs e)
+        private void OnStateChanged(object sender, EventArgs e)
         {
             if (KitchenGameManager.Instance.IsGameOver())
             {
@@ -69,12 +69,12 @@ namespace UI
 
         private void AddEvents()
         {
-            KitchenGameManager.Instance.OnStateChangedEvent += StateChangedEvent;
+            KitchenGameManager.Instance.OnStateChangedEvent += OnStateChanged;
         }
 
         private void RemoveEvents()
         {
-            KitchenGameManager.Instance.OnStateChangedEvent -= StateChangedEvent;
+            KitchenGameManager.Instance.OnStateChangedEvent -= OnStateChanged;
         }
 
         #endregion

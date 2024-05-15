@@ -282,7 +282,7 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
 
     #region Event: OnInteractAlternateAction
 
-    private void InteractAlternateActionEvent(object sender, EventArgs e)
+    private void OnInteractAlternateAction(object sender, EventArgs e)
     {
         if (!KitchenGameManager.Instance.IsGamePlaying()) return;
 
@@ -296,7 +296,7 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
 
     #region Event: OnInteractAction
 
-    private void InteractActionEvent(object sender, EventArgs e)
+    private void OnInteractAction(object sender, EventArgs e)
     {
         if (!KitchenGameManager.Instance.IsGamePlaying()) return;
 
@@ -312,14 +312,14 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
 
     private void AddEvents()
     {
-        GameInput.Instance.OnInteractActionEvent += InteractActionEvent;
-        GameInput.Instance.OnInteractAlternateActionEvent += InteractAlternateActionEvent;
+        GameInput.Instance.OnInteractActionEvent += OnInteractAction;
+        GameInput.Instance.OnInteractAlternateActionEvent += OnInteractAlternateAction;
     }
 
     private void RemoveEvents()
     {
-        GameInput.Instance.OnInteractActionEvent -= InteractActionEvent;
-        GameInput.Instance.OnInteractAlternateActionEvent -= InteractAlternateActionEvent;
+        GameInput.Instance.OnInteractActionEvent -= OnInteractAction;
+        GameInput.Instance.OnInteractAlternateActionEvent -= OnInteractAlternateAction;
     }
 
     #endregion

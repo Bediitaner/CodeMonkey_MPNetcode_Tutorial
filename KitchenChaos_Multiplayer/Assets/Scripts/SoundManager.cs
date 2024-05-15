@@ -113,7 +113,7 @@ public class SoundManager : MonoBehaviour
 
     #region Event: OnAnyObjectTrashed
 
-    private void AnyObjectTrashedEvent(object sender, EventArgs e)
+    private void OnAnyObjectTrashed(object sender, EventArgs e)
     {
         TrashCounter trashCounter = sender as TrashCounter;
         PlaySound(audioClipRefsSO.trash, trashCounter.transform.position);
@@ -123,7 +123,7 @@ public class SoundManager : MonoBehaviour
 
     #region Event: OnAnyObjectPlacedHere
 
-    private void AnyObjectPlacedHereEvent(object sender, EventArgs e)
+    private void OnAnyObjectPlacedHere(object sender, EventArgs e)
     {
         BaseCounter baseCounter = sender as BaseCounter;
         PlaySound(audioClipRefsSO.objectDrop, baseCounter.transform.position);
@@ -133,7 +133,7 @@ public class SoundManager : MonoBehaviour
 
     #region Event: OnAnyPickedSomething
 
-    private void AnyPickedSomethingEvent(object sender, EventArgs e)
+    private void OnAnyPickedSomething(object sender, EventArgs e)
     {
         Player player = sender as Player;
         PlaySound(audioClipRefsSO.objectPickup, player.transform.position);
@@ -143,7 +143,7 @@ public class SoundManager : MonoBehaviour
 
     #region Event: OnAnyCut
 
-    private void AnyCutEvent(object sender, EventArgs e)
+    private void OnAnyCut(object sender, EventArgs e)
     {
         CuttingCounter cuttingCounter = sender as CuttingCounter;
         PlaySound(audioClipRefsSO.chop, cuttingCounter.transform.position);
@@ -153,7 +153,7 @@ public class SoundManager : MonoBehaviour
 
     #region Event: OnRecipeFailed
 
-    private void RecipeFailedEvent(object sender, EventArgs e)
+    private void OnRecipeFailed(object sender, EventArgs e)
     {
         DeliveryCounter deliveryCounter = DeliveryCounter.Instance;
         PlaySound(audioClipRefsSO.deliveryFail, deliveryCounter.transform.position);
@@ -163,7 +163,7 @@ public class SoundManager : MonoBehaviour
 
     #region Event: OnRecipeSuccess
 
-    private void RecipeSuccessEvent(object sender, EventArgs e)
+    private void OnRecipeSuccess(object sender, EventArgs e)
     {
         DeliveryCounter deliveryCounter = DeliveryCounter.Instance;
         PlaySound(audioClipRefsSO.deliverySuccess, deliveryCounter.transform.position);
@@ -175,22 +175,22 @@ public class SoundManager : MonoBehaviour
 
     private void AddEvents()
     {
-        DeliveryManager.Instance.OnRecipeSuccessEvent += RecipeSuccessEvent;
-        DeliveryManager.Instance.OnRecipeFailedEvent += RecipeFailedEvent;
-        CuttingCounter.OnAnyCutEvent += AnyCutEvent;
-        Player.OnAnyPickedSomethingEvent += AnyPickedSomethingEvent;
-        BaseCounter.OnAnyObjectPlacedHereEvent += AnyObjectPlacedHereEvent;
-        TrashCounter.OnAnyObjectTrashedEvent += AnyObjectTrashedEvent;
+        DeliveryManager.Instance.OnRecipeSuccessEvent += OnRecipeSuccess;
+        DeliveryManager.Instance.OnRecipeFailedEvent += OnRecipeFailed;
+        CuttingCounter.OnAnyCutEvent += OnAnyCut;
+        Player.OnAnyPickedSomethingEvent += OnAnyPickedSomething;
+        BaseCounter.OnAnyObjectPlacedHereEvent += OnAnyObjectPlacedHere;
+        TrashCounter.OnAnyObjectTrashedEvent += OnAnyObjectTrashed;
     }
 
     private void RemoveEvents()
     {
-        DeliveryManager.Instance.OnRecipeSuccessEvent -= RecipeSuccessEvent;
-        DeliveryManager.Instance.OnRecipeFailedEvent -= RecipeFailedEvent;
-        CuttingCounter.OnAnyCutEvent -= AnyCutEvent;
-        Player.OnAnyPickedSomethingEvent -= AnyPickedSomethingEvent;
-        BaseCounter.OnAnyObjectPlacedHereEvent -= AnyObjectPlacedHereEvent;
-        TrashCounter.OnAnyObjectTrashedEvent -= AnyObjectTrashedEvent;
+        DeliveryManager.Instance.OnRecipeSuccessEvent -= OnRecipeSuccess;
+        DeliveryManager.Instance.OnRecipeFailedEvent -= OnRecipeFailed;
+        CuttingCounter.OnAnyCutEvent -= OnAnyCut;
+        Player.OnAnyPickedSomethingEvent -= OnAnyPickedSomething;
+        BaseCounter.OnAnyObjectPlacedHereEvent -= OnAnyObjectPlacedHere;
+        TrashCounter.OnAnyObjectTrashedEvent -= OnAnyObjectTrashed;
     }
 
     #endregion

@@ -36,7 +36,7 @@ namespace Counters
         
         #region Event: OnCut
 
-        private void CutEvent(object sender, EventArgs e)
+        private void OnCut(object sender, EventArgs e)
         {
             animator.SetTrigger(CUT);
         }
@@ -47,12 +47,12 @@ namespace Counters
 
         private void AddEvents()
         {
-            cuttingCounter.OnCutEvent += CutEvent;
+            cuttingCounter.OnCutEvent += OnCut;
         }
         
         private void RemoveEvents()
         {
-            cuttingCounter.OnCutEvent -= CutEvent;
+            cuttingCounter.OnCutEvent -= OnCut;
         }
 
         #endregion
