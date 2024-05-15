@@ -12229,12 +12229,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1509563625}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0936d2c45992ee4db2ffe062bc6375c, type: 3}
+  m_Script: {fileID: 11500000, guid: b6c3f271021dedb45a32dcbed3b4de14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resumeButton: {fileID: 0}
-  mainMenuButton: {fileID: 0}
-  optionsButton: {fileID: 0}
 --- !u!1 &1509564501
 GameObject:
   m_ObjectHideFlags: 0
