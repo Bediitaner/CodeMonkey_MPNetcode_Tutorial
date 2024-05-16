@@ -26,6 +26,38 @@ public class KitchenGameMultiplayer : NetworkBehaviour
     #endregion
 
 
+    #region Start: Host
+
+    public void StartHost()
+    {
+        NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
+        NetworkManager.Singleton.StartHost();
+    }
+
+    private void ApprovalCheck(NetworkManager.ConnectionApprovalRequest connectionApprovalRequest, NetworkManager.ConnectionApprovalResponse connectionApprovalResponse)
+    {
+        if (KitchenGameManager.Instance.IsWaitingToStart())
+        {
+            connectionApprovalResponse.Approved = true;
+            connectionApprovalResponse.CreatePlayerObject = true;
+        }
+        else
+        {
+            connectionApprovalResponse.Approved = false;
+        }
+    }
+
+    #endregion
+
+    #region Start: Client
+
+    public void StartClient()
+    {
+        NetworkManager.Singleton.StartClient();
+    }
+
+    #endregion
+
     #region Spawn: KitchenObject
 
     public void SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenObjectParent kitchenObjectParent)
@@ -107,7 +139,7 @@ public class KitchenGameMultiplayer : NetworkBehaviour
     {
         kitchenObjectNetworkObjectReference.TryGet(out NetworkObject kitchenObjectNetworkObject);
         KitchenObject kitchenObject = kitchenObjectNetworkObject.GetComponent<KitchenObject>();
-        
+
         kitchenObject.ClearKitchenObjectParent();
     }
 

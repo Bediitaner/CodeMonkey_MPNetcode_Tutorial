@@ -26,7 +26,7 @@ public class KitchenGameManager : NetworkBehaviour
     public event EventHandler OnLocalGamePausedEvent;
     public event EventHandler OnLocalGameUnpausedEvent;
     public event EventHandler OnLocalPlayerReadyChangedEvent;
-    
+
     public event EventHandler OnMultiplayerGamePausedEvent;
     public event EventHandler OnMultiplayerGameUnpausedEvent;
 
@@ -37,6 +37,7 @@ public class KitchenGameManager : NetworkBehaviour
     private float gamePlayingTimerMax = 90f;
     private bool localPlayerReady;
     private bool isLocalGamePaused = false;
+    private bool autoTestGamePausedState;
 
     private NetworkVariable<State> state = new NetworkVariable<State>(State.WaitingToStart);
     private NetworkVariable<float> countdownToStartTimer = new NetworkVariable<float>(3f);
@@ -49,7 +50,7 @@ public class KitchenGameManager : NetworkBehaviour
     #endregion
 
 
-    #region Unity: Awake | Start | Update
+    #region Unity: Awake | Start | Update | LateUpdate
 
     private void Awake()
     {
@@ -97,6 +98,15 @@ public class KitchenGameManager : NetworkBehaviour
         }
     }
 
+    private void LateUpdate()
+    {
+        if (autoTestGamePausedState)
+        {
+            autoTestGamePausedState = false;
+            TestGamePausedState();
+        }
+    }
+
     #endregion
 
     #region Netcode: OnNetworkSpawn
@@ -105,6 +115,11 @@ public class KitchenGameManager : NetworkBehaviour
     {
         state.OnValueChanged += OnStateValueChanged;
         isGamePaused.OnValueChanged += OnPauseValueChanged;
+
+        if (IsServer)
+        {
+            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnectCallback;
+        }
     }
 
     #endregion
@@ -210,6 +225,15 @@ public class KitchenGameManager : NetworkBehaviour
 
     #endregion
 
+    #region Is: 
+
+    public bool IsWaitingToStart()
+    {
+        return state.Value == State.WaitingToStart;
+    }
+
+    #endregion
+
 
     #region Get: CountdownToStartTimer
 
@@ -254,6 +278,16 @@ public class KitchenGameManager : NetworkBehaviour
         }
 
         Debug.Log("allClientsReady: " + allClientsReady);
+    }
+
+    #endregion
+
+
+    #region Event: OnClientDisconnectCallback
+
+    private void OnClientDisconnectCallback(ulong clientID)
+    {
+        autoTestGamePausedState = true;
     }
 
     #endregion

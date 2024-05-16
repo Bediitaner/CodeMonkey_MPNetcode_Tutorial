@@ -39,7 +39,7 @@ namespace UI
         private void OnHostButtonClicked()
         {
             Debug.Log("Host");
-            NetworkManager.Singleton.StartHost();
+            KitchenGameMultiplayer.Instance.StartHost();
             Hide();
         }
 
@@ -50,7 +50,7 @@ namespace UI
         private void OnClientButtonClicked()
         {
             Debug.Log("Client");
-            NetworkManager.Singleton.StartClient();
+            KitchenGameMultiplayer.Instance.StartClient();
             Hide();
         }
 

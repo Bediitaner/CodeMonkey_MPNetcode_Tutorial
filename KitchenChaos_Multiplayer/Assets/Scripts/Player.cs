@@ -88,8 +88,15 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
         }
 
         transform.position = spawnPositionList[(int)OwnerClientId];
-        
+
         OnAnyPlayerSpawnedEvent?.Invoke(this, EventArgs.Empty);
+
+        if (IsServer)
+        {
+            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnectCallback;
+        }
+        
+        Debug.Log("ClientId: " + OwnerClientId + " ServerId: " + NetworkManager.ServerClientId);
     }
 
     #endregion
@@ -162,7 +169,7 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
         float moveDistance = moveSpeed * Time.deltaTime;
         float playerRadius = .7f;
         float playerHeight = 2f;
-        bool canMove = !Physics.BoxCast(transform.position, Vector3.one * playerRadius, moveDir, Quaternion.identity, moveDistance,collisionsLayerMask);
+        bool canMove = !Physics.BoxCast(transform.position, Vector3.one * playerRadius, moveDir, Quaternion.identity, moveDistance, collisionsLayerMask);
 
         if (!canMove)
         {
@@ -171,7 +178,7 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
             // Attempt only X movement
             Vector3 moveDirX = new Vector3(moveDir.x, 0, 0).normalized;
             canMove = (moveDir.x < -.5f || moveDir.x > +.5f) &&
-                      !Physics.BoxCast(transform.position, Vector3.one * playerRadius, moveDirX, Quaternion.identity, moveDistance,collisionsLayerMask);
+                      !Physics.BoxCast(transform.position, Vector3.one * playerRadius, moveDirX, Quaternion.identity, moveDistance, collisionsLayerMask);
 
             if (canMove)
             {
@@ -184,7 +191,8 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
 
                 // Attempt only Z movement
                 Vector3 moveDirZ = new Vector3(0, 0, moveDir.z).normalized;
-                canMove = (moveDir.z < -.5f || moveDir.z > +.5f) && !Physics.BoxCast(transform.position, Vector3.one * playerRadius, moveDirZ, Quaternion.identity, moveDistance,collisionsLayerMask);
+                canMove = (moveDir.z < -.5f || moveDir.z > +.5f) && !Physics.BoxCast(transform.position, Vector3.one * playerRadius, moveDirZ, Quaternion.identity,
+                    moveDistance, collisionsLayerMask);
 
                 if (canMove)
                 {
@@ -275,6 +283,19 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
     public void ClearKitchenObject()
     {
         kitchenObject = null;
+    }
+
+    #endregion
+
+
+    #region Event: OnClientDisconnectCallback
+
+    private void OnClientDisconnectCallback(ulong clientId)
+    {
+        if (clientId == OwnerClientId && HasKitchenObject())
+        {
+            KitchenObject.DestroyKitchenObject(GetKitchenObject());
+        }
     }
 
     #endregion

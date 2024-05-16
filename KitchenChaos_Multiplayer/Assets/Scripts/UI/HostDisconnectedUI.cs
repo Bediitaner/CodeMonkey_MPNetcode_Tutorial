@@ -1,16 +1,14 @@
 using System;
-using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI
 {
-    public class GameOverUI : MonoBehaviour
+    public class HostDisconnectedUI : MonoBehaviour
     {
         #region Contents
 
-        [SerializeField] private TextMeshProUGUI recipesDeliveredText;
         [SerializeField] private Button playAgainButton;
 
         #endregion
@@ -42,7 +40,6 @@ namespace UI
         private void Show()
         {
             gameObject.SetActive(true);
-            playAgainButton.Select();
         }
 
         private void Hide()
@@ -51,21 +48,16 @@ namespace UI
         }
 
         #endregion
-        
-        
-        #region Event: OnStateChanged
 
-        private void OnStateChanged(object sender, EventArgs e)
+
+        #region Event: OnClientDisconnectCallback
+
+        private void OnClientDisconnectCallback(ulong clientId)
         {
-            if (KitchenGameManager.Instance.IsGameOver())
+            if (clientId == NetworkManager.ServerClientId)
             {
+                //Server is shutting down
                 Show();
-
-                recipesDeliveredText.text = DeliveryManager.Instance.GetSuccessfulRecipesAmount().ToString();
-            }
-            else
-            {
-                Hide();
             }
         }
 
@@ -75,12 +67,12 @@ namespace UI
 
         private void AddEvents()
         {
-            KitchenGameManager.Instance.OnStateChangedEvent += OnStateChanged;
+            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnectCallback;
         }
 
         private void RemoveEvents()
         {
-            KitchenGameManager.Instance.OnStateChangedEvent -= OnStateChanged;
+            NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnectCallback;
         }
 
         #endregion

@@ -1,4 +1,5 @@
 using System;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,8 +20,17 @@ namespace UI
 
         private void Awake()
         {
-            resumeButton.onClick.AddListener(() => { KitchenGameManager.Instance.TogglePauseGame(); });
-            mainMenuButton.onClick.AddListener(() => { Loader.Load(Scene.MainMenuScene); });
+            resumeButton.onClick.AddListener(() =>
+            {
+                KitchenGameManager.Instance.TogglePauseGame();
+            });
+            
+            mainMenuButton.onClick.AddListener(() =>
+            {
+                NetworkManager.Singleton.Shutdown();
+                Loader.Load(Scene.MainMenuScene);
+            });
+            
             optionsButton.onClick.AddListener(() =>
             {
                 Hide();
