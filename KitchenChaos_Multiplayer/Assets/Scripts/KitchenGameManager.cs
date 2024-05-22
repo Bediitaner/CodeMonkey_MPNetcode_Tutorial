@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class KitchenGameManager : NetworkBehaviour
 {
@@ -32,6 +33,12 @@ public class KitchenGameManager : NetworkBehaviour
 
     #endregion
 
+    #region Content
+
+    [SerializeField] private Transform playerPrefab;
+
+    #endregion
+    
     #region Fields
 
     private float gamePlayingTimerMax = 90f;
@@ -119,6 +126,16 @@ public class KitchenGameManager : NetworkBehaviour
         if (IsServer)
         {
             NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnectCallback;
+            NetworkManager.Singleton.SceneManager.OnLoadEventCompleted += OnSceneLoadComplete;
+        }
+    }
+
+    private void OnSceneLoadComplete(string scenename, LoadSceneMode loadscenemode, List<ulong> clientscompleted, List<ulong> clientstimedout)
+    {
+        foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
+        {
+            var playerTransform = Instantiate(playerPrefab);
+            playerTransform.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
         }
     }
 
@@ -225,7 +242,7 @@ public class KitchenGameManager : NetworkBehaviour
 
     #endregion
 
-    #region Is: 
+    #region Is: WaitingToStart
 
     public bool IsWaitingToStart()
     {

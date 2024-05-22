@@ -1,10 +1,13 @@
+using Unity.Netcode;
 using UnityEngine.SceneManagement;
 
 public enum Scene
 {
     MainMenuScene,
     GameScene,
-    LoadingScene
+    LoadingScene,
+    LobbyScene,
+    CharacterSelectScene
 }
 
 public static class Loader
@@ -22,6 +25,15 @@ public static class Loader
         Loader.targetScene = targetScene;
 
         SceneManager.LoadScene(Scene.LoadingScene.ToString());
+    }
+
+    #endregion
+
+    #region Load: Network
+
+    public static void LoadNetwork(Scene targetScene)
+    {
+        NetworkManager.Singleton.SceneManager.LoadScene(targetScene.ToString(), LoadSceneMode.Single);
     }
 
     #endregion
