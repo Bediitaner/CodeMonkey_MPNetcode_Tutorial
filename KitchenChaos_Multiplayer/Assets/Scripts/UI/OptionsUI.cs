@@ -1,4 +1,6 @@
 using System;
+using KitchenChaos_Multiplayer.Game;
+using KitchenChaos_Multiplayer.Managers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

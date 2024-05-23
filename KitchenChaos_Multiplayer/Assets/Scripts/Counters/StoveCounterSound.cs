@@ -1,3 +1,5 @@
+using KitchenChaos_Multiplayer.Game;
+using KitchenChaos_Multiplayer.Managers;
 using UnityEngine;
 
 namespace Counters
