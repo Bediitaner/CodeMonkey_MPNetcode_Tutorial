@@ -14,16 +14,11 @@ namespace UI
 
         #endregion
 
-        #region Unity: Awake | Start
+        #region Unity: Awake | Start | OnDestroy
 
         private void Awake()
         {
-            playAgainButton.onClick.AddListener(() =>
-            {
-                NetworkManager.Singleton.Shutdown();
-                
-                Loader.Load(Scene.MainMenuScene);
-            });
+            playAgainButton.onClick.AddListener(() => { Loader.Load(Scene.MainMenuScene); });
         }
 
         private void Start()
@@ -31,6 +26,11 @@ namespace UI
             AddEvents();
 
             Hide();
+        }
+
+        private void OnDestroy()
+        {
+            RemoveEvents();
         }
 
         #endregion
@@ -55,6 +55,9 @@ namespace UI
 
         private void OnClientDisconnectCallback(ulong clientId)
         {
+            Debug.Log("You are kicked.");
+
+            //TODO: FİX BUG
             if (clientId == NetworkManager.ServerClientId)
             {
                 //Server is shutting down

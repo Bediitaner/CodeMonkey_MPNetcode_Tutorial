@@ -85,6 +85,7 @@ MonoBehaviour:
   - {x: 2, y: 0, z: 0}
   - {x: -2, y: 0, z: -2}
   - {x: 2, y: 0, z: -2}
+  playerVisual: {fileID: 3981216577634949338}
 --- !u!114 &8872803123093800153
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -390,6 +391,18 @@ Animator:
     type: 3}
   m_PrefabInstance: {fileID: 4764516373172580459}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &3981216577634949338 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8457453369050015921, guid: 1c5dda3c7cd3cf742afcade5419faeab,
+    type: 3}
+  m_PrefabInstance: {fileID: 4764516373172580459}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8045578795569306700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 375fadc3b44a4a058bb18a983b867321, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8045578795569306700 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3294758251327466535, guid: 1c5dda3c7cd3cf742afcade5419faeab,

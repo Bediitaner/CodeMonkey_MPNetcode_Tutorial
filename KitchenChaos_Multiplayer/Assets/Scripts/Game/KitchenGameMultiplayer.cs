@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 using Unity.Netcode;
 using UnityEngine;
@@ -25,6 +26,7 @@ namespace KitchenChaos_Multiplayer.Game
         #region Contents
 
         [SerializeField] private KitchenObjectListSO kitchenObjectListSO;
+        [SerializeField] private List<Color> playerColorList;
 
         #endregion
 
@@ -57,12 +59,29 @@ namespace KitchenChaos_Multiplayer.Game
         {
             NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
             NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+            NetworkManager.Singleton.OnClientDisconnectCallback += Server_OnClientDisconnectCallback;
             NetworkManager.Singleton.StartHost();
+        }
+
+        private void Server_OnClientDisconnectCallback(ulong clientId)
+        {
+            for (int i = 0; i < playerDataNetworkList.Count; i++)
+            {
+                var playerData = playerDataNetworkList[i];
+                if (playerData.clientId == clientId)
+                {
+                    playerDataNetworkList.RemoveAt(i);
+                }
+            }
         }
 
         private void OnClientConnected(ulong clientId)
         {
-            playerDataNetworkList.Add(new PlayerData { clientId = clientId });
+            playerDataNetworkList.Add(new PlayerData
+            {
+                clientId = clientId,
+                colorId = GetFirstUnusedColorId(),
+            });
         }
 
         private void ApprovalCheck(NetworkManager.ConnectionApprovalRequest connectionApprovalRequest,
@@ -93,11 +112,11 @@ namespace KitchenChaos_Multiplayer.Game
         {
             OnTryingToJoinGameEvent?.Invoke(this, EventArgs.Empty);
 
-            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnectCallback;
+            NetworkManager.Singleton.OnClientDisconnectCallback += Client_OnClientDisconnectCallback;
             NetworkManager.Singleton.StartClient();
         }
 
-        private void OnClientDisconnectCallback(ulong obj)
+        private void Client_OnClientDisconnectCallback(ulong obj)
         {
             OnFailedToJoinGameEvent?.Invoke(this, EventArgs.Empty);
         }
@@ -153,6 +172,129 @@ namespace KitchenChaos_Multiplayer.Game
 
         #endregion
 
+        #region Get: PlayerData: From: Index
+
+        public PlayerData GetPlayerDataFromIndex(int playerIndex)
+        {
+            return playerDataNetworkList[playerIndex];
+        }
+
+        #endregion
+
+        #region Get: PlayerData: From: ClientId
+
+        public PlayerData GetPlayerDataFromClientId(ulong clientId)
+        {
+            foreach (var playerData in playerDataNetworkList)
+            {
+                if (playerData.clientId == clientId)
+                {
+                    return playerData;
+                }
+            }
+
+            return default;
+        }
+
+        #endregion
+
+        #region Get: PlayerData: Index: From: ClientId
+
+        public int GetPlayerDataIndexFromClientId(ulong clientId)
+        {
+            for (int i = 0; i < playerDataNetworkList.Count; i++)
+            {
+                if (playerDataNetworkList[i].clientId == clientId)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        #endregion
+
+        #region Get: PlayerData
+
+        public PlayerData GetPlayerData()
+        {
+            return GetPlayerDataFromClientId(NetworkManager.Singleton.LocalClientId);
+        }
+
+        #endregion
+
+        #region Get: Player: Color
+
+        public Color GetPlayerColor(int colorId)
+        {
+            return playerColorList[colorId];
+        }
+
+        #endregion
+
+        #region Get: First: Unused: Color: Id
+
+        private int GetFirstUnusedColorId()
+        {
+            for (int i = 0; i < playerColorList.Count; i++)
+            {
+                if (IsColorAvailable(i))
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        #endregion
+
+
+        #region Change: Player: Color
+
+        public void ChangePlayerColor(int colorId)
+        {
+            ChangePlayerColorServerRpc(colorId);
+        }
+
+        #endregion
+
+        #region ServerRpc: Change: Player: Color
+
+        [ServerRpc(RequireOwnership = false)]
+        private void ChangePlayerColorServerRpc(int colorId, ServerRpcParams serverRpcParams = default)
+        {
+            if (!IsColorAvailable(colorId))
+            {
+                return;
+            }
+
+            int playerIndex = GetPlayerDataIndexFromClientId(serverRpcParams.Receive.SenderClientId);
+            PlayerData playerData = playerDataNetworkList[playerIndex];
+            playerData.colorId = colorId;
+            playerDataNetworkList[playerIndex] = playerData;
+        }
+
+        #endregion
+
+        #region Is: Color: Available
+
+        private bool IsColorAvailable(int colorId)
+        {
+            foreach (var playerData in playerDataNetworkList)
+            {
+                if (playerData.colorId == colorId)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        #endregion
+
 
         #region Destroy: KitchenObject
 
@@ -200,6 +342,17 @@ namespace KitchenChaos_Multiplayer.Game
         }
 
         #endregion
+
+        #region Kick: Player
+
+        public void KickPlayer(ulong clientId)
+        {
+            NetworkManager.Singleton.DisconnectClient(clientId);
+            Server_OnClientDisconnectCallback(clientId);
+        }
+
+        #endregion
+
 
         #region Event: OnPlayerDataNetworkListChanged
 

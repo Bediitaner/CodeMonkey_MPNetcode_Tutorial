@@ -46,6 +46,7 @@ namespace KitchenChaos_Multiplayer.Game
         [SerializeField] private LayerMask collisionsLayerMask;
         [SerializeField] private Transform kitchenObjectHoldPoint;
         [SerializeField] private List<Vector3> spawnPositionList;
+        [SerializeField] private PlayerVisual playerVisual;
 
         #endregion
 
@@ -68,6 +69,9 @@ namespace KitchenChaos_Multiplayer.Game
         private void Start()
         {
             AddEvents();
+            
+            PlayerData playerData = KitchenGameMultiplayer.Instance.GetPlayerDataFromClientId(OwnerClientId);
+            playerVisual.SetPlayerColor(KitchenGameMultiplayer.Instance.GetPlayerColor(playerData.colorId));
         }
 
         private void Update()
@@ -89,7 +93,7 @@ namespace KitchenChaos_Multiplayer.Game
                 LocalInstance = this;
             }
 
-            transform.position = spawnPositionList[(int)OwnerClientId];
+            transform.position = spawnPositionList[KitchenGameMultiplayer.Instance.GetPlayerDataIndexFromClientId(OwnerClientId)];
 
             OnAnyPlayerSpawnedEvent?.Invoke(this, EventArgs.Empty);
 
@@ -97,7 +101,7 @@ namespace KitchenChaos_Multiplayer.Game
             {
                 NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnectCallback;
             }
-        
+
             Debug.Log("ClientId: " + OwnerClientId + " ServerId: " + NetworkManager.ServerClientId);
         }
 
