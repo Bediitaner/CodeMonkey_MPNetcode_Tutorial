@@ -4,6 +4,7 @@ using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 namespace KitchenChaos_Multiplayer.Game
 {
@@ -32,9 +33,11 @@ namespace KitchenChaos_Multiplayer.Game
 
         #region Fields
 
-        private const int MAX_PLAYER_AMOUNT = 4;
+        public const int MAX_PLAYER_AMOUNT = 4;
+        public const string PLAYER_PREFS_PLAYER_NAME_MULTIPLAYER = "PlayerNameMultiplayer";
 
         private NetworkList<PlayerData> playerDataNetworkList;
+        private string _playerName;
 
         #endregion
 
@@ -45,6 +48,8 @@ namespace KitchenChaos_Multiplayer.Game
             Instance = this;
 
             DontDestroyOnLoad(gameObject);
+
+            _playerName = PlayerPrefs.GetString(PLAYER_PREFS_PLAYER_NAME_MULTIPLAYER, "PlayerName" + Random.Range(100, 1000));
 
             playerDataNetworkList = new NetworkList<PlayerData>();
             playerDataNetworkList.OnListChanged += OnPlayerDataNetworkListChanged;
@@ -58,12 +63,12 @@ namespace KitchenChaos_Multiplayer.Game
         public void StartHost()
         {
             NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
-            NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
-            NetworkManager.Singleton.OnClientDisconnectCallback += Server_OnClientDisconnectCallback;
+            NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_OnClientConnected;
+            NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_Server_OnClientDisconnectCallback;
             NetworkManager.Singleton.StartHost();
         }
 
-        private void Server_OnClientDisconnectCallback(ulong clientId)
+        private void NetworkManager_Server_OnClientDisconnectCallback(ulong clientId)
         {
             for (int i = 0; i < playerDataNetworkList.Count; i++)
             {
@@ -75,13 +80,15 @@ namespace KitchenChaos_Multiplayer.Game
             }
         }
 
-        private void OnClientConnected(ulong clientId)
+        private void NetworkManager_OnClientConnected(ulong clientId)
         {
             playerDataNetworkList.Add(new PlayerData
             {
                 clientId = clientId,
                 colorId = GetFirstUnusedColorId(),
             });
+            
+            SetPlayerNameServerRpc(GetPlayerName());
         }
 
         private void ApprovalCheck(NetworkManager.ConnectionApprovalRequest connectionApprovalRequest,
@@ -113,7 +120,13 @@ namespace KitchenChaos_Multiplayer.Game
             OnTryingToJoinGameEvent?.Invoke(this, EventArgs.Empty);
 
             NetworkManager.Singleton.OnClientDisconnectCallback += Client_OnClientDisconnectCallback;
+            NetworkManager.Singleton.OnClientConnectedCallback += Client_OnClientConnectedCallback;
             NetworkManager.Singleton.StartClient();
+        }
+
+        private void Client_OnClientConnectedCallback(ulong obj)
+        {
+            SetPlayerNameServerRpc(GetPlayerName());
         }
 
         private void Client_OnClientDisconnectCallback(ulong obj)
@@ -131,6 +144,7 @@ namespace KitchenChaos_Multiplayer.Game
         }
 
         #endregion
+
 
         #region ServerRpc: Spawn: KitchenObject
 
@@ -250,6 +264,26 @@ namespace KitchenChaos_Multiplayer.Game
 
         #endregion
 
+        #region Get: PlayerName
+
+        public string GetPlayerName()
+        {
+            return _playerName;
+        }
+
+        #endregion
+
+
+        #region Set: PlayerName
+
+        public void SetPlayerName(string playerName)
+        {
+            this._playerName = playerName;
+            PlayerPrefs.SetString(PLAYER_PREFS_PLAYER_NAME_MULTIPLAYER, playerName);
+        }
+
+        #endregion
+
 
         #region Change: Player: Color
 
@@ -277,6 +311,20 @@ namespace KitchenChaos_Multiplayer.Game
         }
 
         #endregion
+
+        #region ServerRpc: Set: PlayerName
+
+        [ServerRpc(RequireOwnership = false)]
+        private void SetPlayerNameServerRpc(string playerName, ServerRpcParams serverRpcParams = default)
+        {
+            int playerIndex = GetPlayerDataIndexFromClientId(serverRpcParams.Receive.SenderClientId);
+            PlayerData playerData = playerDataNetworkList[playerIndex];
+            playerData.playerName = playerName;
+            playerDataNetworkList[playerIndex] = playerData;
+        }
+
+        #endregion
+
 
         #region Is: Color: Available
 
@@ -348,7 +396,7 @@ namespace KitchenChaos_Multiplayer.Game
         public void KickPlayer(ulong clientId)
         {
             NetworkManager.Singleton.DisconnectClient(clientId);
-            Server_OnClientDisconnectCallback(clientId);
+            NetworkManager_Server_OnClientDisconnectCallback(clientId);
         }
 
         #endregion

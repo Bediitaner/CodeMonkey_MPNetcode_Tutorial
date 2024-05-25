@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +12,7 @@ namespace KitchenChaos_Multiplayer.Game
 
         [SerializeField] private int playerIndex;
         [SerializeField] private GameObject goReady;
+        [SerializeField] private TextMeshPro txtPlayerName;
         [SerializeField] private PlayerVisual playerVisual;
         [SerializeField] private Button btnKick;
 
@@ -58,6 +60,7 @@ namespace KitchenChaos_Multiplayer.Game
 
                 var playerData = KitchenGameMultiplayer.Instance.GetPlayerDataFromIndex(playerIndex);
                 goReady.SetActive(CharacterSelectReady.Instance.IsPlayerReady(playerData.clientId));
+                txtPlayerName.text = playerData.playerName.ToString();
                 playerVisual.SetPlayerColor(KitchenGameMultiplayer.Instance.GetPlayerColor(playerData.colorId));
             }
             else
