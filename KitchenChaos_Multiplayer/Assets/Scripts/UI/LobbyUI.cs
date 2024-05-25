@@ -72,6 +72,7 @@ namespace UI
 
         private void OnBtnMainMenuClicked()
         {
+            KitchenGameLobby.Instance.LeaveLobby();
             Loader.Load(Scene.MainMenuScene);
         }
 

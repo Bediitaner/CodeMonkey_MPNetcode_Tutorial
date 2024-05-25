@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 using Unity.Netcode;
+using Unity.Services.Authentication;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
@@ -89,6 +90,7 @@ namespace KitchenChaos_Multiplayer.Game
             });
             
             SetPlayerNameServerRpc(GetPlayerName());
+            SetPlayerIdServerRpc(AuthenticationService.Instance.PlayerId);
         }
 
         private void ApprovalCheck(NetworkManager.ConnectionApprovalRequest connectionApprovalRequest,
@@ -127,6 +129,7 @@ namespace KitchenChaos_Multiplayer.Game
         private void Client_OnClientConnectedCallback(ulong obj)
         {
             SetPlayerNameServerRpc(GetPlayerName());
+            SetPlayerIdServerRpc(AuthenticationService.Instance.PlayerId);
         }
 
         private void Client_OnClientDisconnectCallback(ulong obj)
@@ -320,6 +323,19 @@ namespace KitchenChaos_Multiplayer.Game
             int playerIndex = GetPlayerDataIndexFromClientId(serverRpcParams.Receive.SenderClientId);
             PlayerData playerData = playerDataNetworkList[playerIndex];
             playerData.playerName = playerName;
+            playerDataNetworkList[playerIndex] = playerData;
+        }
+
+        #endregion
+        
+        #region ServerRpc: Set: PlayerId
+
+        [ServerRpc(RequireOwnership = false)]
+        private void SetPlayerIdServerRpc(string playerId, ServerRpcParams serverRpcParams = default)
+        {
+            int playerIndex = GetPlayerDataIndexFromClientId(serverRpcParams.Receive.SenderClientId);
+            PlayerData playerData = playerDataNetworkList[playerIndex];
+            playerData.playerId = playerId;
             playerDataNetworkList[playerIndex] = playerData;
         }
 

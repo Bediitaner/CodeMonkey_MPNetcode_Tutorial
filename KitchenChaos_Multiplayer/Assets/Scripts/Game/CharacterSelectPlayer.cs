@@ -1,4 +1,5 @@
 using System;
+using Game;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -95,6 +96,7 @@ namespace KitchenChaos_Multiplayer.Game
         private void OnKickButtonClicked()
         {
             var playerData = KitchenGameMultiplayer.Instance.GetPlayerDataFromIndex(playerIndex);
+            KitchenGameLobby.Instance.KickPlayer(playerData.playerId.ToString());
             KitchenGameMultiplayer.Instance.KickPlayer(playerData.clientId);
         }
 

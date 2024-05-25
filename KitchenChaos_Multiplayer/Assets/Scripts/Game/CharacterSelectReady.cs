@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Game;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -69,6 +70,7 @@ namespace KitchenChaos_Multiplayer.Game
 
             if (allClientsReady)
             {
+                KitchenGameLobby.Instance.DeleteLobby();
                 Loader.LoadNetwork(Scene.GameScene);
             }
 

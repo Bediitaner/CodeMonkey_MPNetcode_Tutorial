@@ -17,6 +17,16 @@ namespace Game
 
         #endregion
 
+        #region Events
+
+        public event EventHandler OnCreateLobbyStartedEvent;
+        public event EventHandler OnCreateLobbyFailedEvent;
+        public event EventHandler OnJoinStartedEvent;
+        public event EventHandler OnQuickJoinFailedEvent;
+        public event EventHandler OnJoinFailedEvent;
+
+        #endregion
+
         #region Fields
 
         private Lobby _joinedLobby;
@@ -64,6 +74,8 @@ namespace Game
 
         public async void CreateLobby(string lobbyName, bool isPrivate)
         {
+            OnCreateLobbyStartedEvent?.Invoke(this, EventArgs.Empty);
+            
             try
             {
                 _joinedLobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, KitchenGameMultiplayer.MAX_PLAYER_AMOUNT, new CreateLobbyOptions
@@ -77,6 +89,7 @@ namespace Game
             catch (LobbyServiceException e)
             {
                 Debug.Log(e);
+                OnCreateLobbyFailedEvent?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -86,6 +99,8 @@ namespace Game
 
         public async void QuickJoin()
         {
+            OnJoinStartedEvent?.Invoke(this, EventArgs.Empty);
+            
             try
             {
                 _joinedLobby = await LobbyService.Instance.QuickJoinLobbyAsync();
@@ -95,15 +110,17 @@ namespace Game
             catch (LobbyServiceException e)
             {
                 Debug.Log(e);
+                OnQuickJoinFailedEvent?.Invoke(this, EventArgs.Empty);
             }
         }
 
         #endregion
 
-        #region Asyn: Join: Lobby: Code
+        #region Async: Join: Lobby: Code
 
         public async void JoinWithCode(string lobbyCode)
         {
+            OnJoinStartedEvent?.Invoke(this, EventArgs.Empty);
             try
             {
                 _joinedLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(lobbyCode);
@@ -113,6 +130,65 @@ namespace Game
             catch (LobbyServiceException e)
             {
                 Debug.Log(e);
+                OnJoinFailedEvent?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        #endregion
+
+        #region Async: Delete: Lobby
+
+        public async void DeleteLobby()
+        {
+            if (_joinedLobby != null)
+            {
+                try
+                {
+                    await LobbyService.Instance.DeleteLobbyAsync(_joinedLobby.Id);
+                    _joinedLobby = null;
+                }
+                catch (LobbyServiceException e)
+                {
+                    Debug.Log(e);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Async: Leave: Lobby
+
+        public async void LeaveLobby()
+        {
+            if (_joinedLobby != null)
+            {
+                try
+                {
+                    await LobbyService.Instance.RemovePlayerAsync(_joinedLobby.Id, AuthenticationService.Instance.PlayerId);
+                }
+                catch (LobbyServiceException e)
+                {
+                    Debug.Log(e);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Async: Kick: Player
+
+        public async void KickPlayer(string playerId)
+        {
+            if (IsLobbyHost())
+            {
+                try
+                {
+                    await LobbyService.Instance.RemovePlayerAsync(_joinedLobby.Id, playerId);
+                }
+                catch (LobbyServiceException e)
+                {
+                    Debug.Log(e);
+                }
             }
         }
 
