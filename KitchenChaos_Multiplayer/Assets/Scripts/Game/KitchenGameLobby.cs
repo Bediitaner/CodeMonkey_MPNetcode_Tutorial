@@ -6,7 +6,9 @@ using Unity.Services.Core;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
+using Scene = KitchenChaos_Multiplayer.Game.Scene;
 
 namespace Game
 {
@@ -291,7 +293,7 @@ namespace Game
 
         private void HandlePeriodicListLobbies()
         {
-            if (_joinedLobby == null && AuthenticationService.Instance.IsSignedIn)
+            if (_joinedLobby == null && AuthenticationService.Instance.IsSignedIn && SceneManager.GetActiveScene().name == Scene.LobbyScene.ToString())
             {
                 listLobbiesTimer -= Time.deltaTime;
 
