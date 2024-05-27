@@ -40,6 +40,7 @@ namespace UI
 
         private void OnBtnMainMenuClicked()
         {
+            KitchenGameLobby.Instance.LeaveLobby();
             NetworkManager.Singleton.Shutdown();
             Loader.Load(Scene.MainMenuScene);
         }
