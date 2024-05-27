@@ -291,7 +291,7 @@ namespace Game
 
         private void HandlePeriodicListLobbies()
         {
-            if (_joinedLobby != null && AuthenticationService.Instance.IsSignedIn)
+            if (_joinedLobby == null && AuthenticationService.Instance.IsSignedIn)
             {
                 listLobbiesTimer -= Time.deltaTime;
 

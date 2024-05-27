@@ -30,6 +30,10 @@ namespace UI
             AddEvents();
         }
 
+        private void Start()
+        {
+        }
+
         private void OnDestroy()
         {
             RemoveEvents();
@@ -43,9 +47,11 @@ namespace UI
         public void SetLobby(Lobby lobby)
         {
             _lobby = lobby;
+            _txtLobbyName.text = lobby.Name;
         }
 
         #endregion
+        
 
         
         #region Event: OnBtnJoinClicked
