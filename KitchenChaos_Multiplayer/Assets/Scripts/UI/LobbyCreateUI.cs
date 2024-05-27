@@ -80,14 +80,14 @@ namespace UI
         private void AddEvents()
         {
             _btnCreatePrivate.onClick.AddListener(OnBtnCreatePrivateClicked);
-            _btnCreatePrivate.onClick.AddListener(OnBtnCreatePublicClicked);
+            _btnCreatePublic.onClick.AddListener(OnBtnCreatePublicClicked);
             _btnHide.onClick.AddListener(OnBtnHideClicked);
         }
 
         private void RemoveEvents()
         {
             _btnCreatePrivate.onClick.RemoveListener(OnBtnCreatePrivateClicked);
-            _btnCreatePrivate.onClick.RemoveListener(OnBtnCreatePublicClicked);
+            _btnCreatePublic.onClick.RemoveListener(OnBtnCreatePublicClicked);
             _btnHide.onClick.RemoveListener(OnBtnHideClicked);
         }
 

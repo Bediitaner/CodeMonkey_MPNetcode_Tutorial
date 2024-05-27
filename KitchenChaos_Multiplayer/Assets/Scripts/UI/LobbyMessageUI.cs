@@ -121,7 +121,7 @@ namespace UI
 
         #region Event: OnQuickJoinFailed
 
-        private void OnQuickJoinFailed(object sender, EventArgs e)
+        private void OnQuickJoinFailed(object sender, EventArgs e) 
         {
             ShowMessage("Could not find a lobby to join.");
         }

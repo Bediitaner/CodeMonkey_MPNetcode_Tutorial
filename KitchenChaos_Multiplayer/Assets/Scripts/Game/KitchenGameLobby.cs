@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using KitchenChaos_Multiplayer.Game;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
@@ -24,6 +25,7 @@ namespace Game
         public event EventHandler OnJoinStartedEvent;
         public event EventHandler OnQuickJoinFailedEvent;
         public event EventHandler OnJoinFailedEvent;
+        public event EventHandler<OnLobbyListChangedEventArgs> OnLobbyListChangedEvent;
 
         #endregion
 
@@ -31,10 +33,11 @@ namespace Game
 
         private Lobby _joinedLobby;
         private float heartbeatTimer;
+        private float listLobbiesTimer;
 
         #endregion
 
-        #region Unity: Awake
+        #region Unity: Awake | Update
 
         private void Awake()
         {
@@ -48,6 +51,7 @@ namespace Game
         private void Update()
         {
             HandleHeartbeat();
+            HandlePeriodicListLobbies();
         }
 
         #endregion
@@ -75,7 +79,7 @@ namespace Game
         public async void CreateLobby(string lobbyName, bool isPrivate)
         {
             OnCreateLobbyStartedEvent?.Invoke(this, EventArgs.Empty);
-            
+
             try
             {
                 _joinedLobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, KitchenGameMultiplayer.MAX_PLAYER_AMOUNT, new CreateLobbyOptions
@@ -100,7 +104,7 @@ namespace Game
         public async void QuickJoin()
         {
             OnJoinStartedEvent?.Invoke(this, EventArgs.Empty);
-            
+
             try
             {
                 _joinedLobby = await LobbyService.Instance.QuickJoinLobbyAsync();
@@ -124,6 +128,26 @@ namespace Game
             try
             {
                 _joinedLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(lobbyCode);
+
+                KitchenGameMultiplayer.Instance.StartClient();
+            }
+            catch (LobbyServiceException e)
+            {
+                Debug.Log(e);
+                OnJoinFailedEvent?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        #endregion
+
+        #region Async: Join: Lobby: Id
+
+        public async void JoinWithId(string lobbyId)
+        {
+            OnJoinStartedEvent?.Invoke(this, EventArgs.Empty);
+            try
+            {
+                _joinedLobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId);
 
                 KitchenGameMultiplayer.Instance.StartClient();
             }
@@ -214,6 +238,35 @@ namespace Game
         #endregion
 
 
+        #region List: Lobbies
+
+        private async void ListLobbies()
+        {
+            try
+            {
+                var queryLobbyOptions = new QueryLobbiesOptions
+                {
+                    Filters = new List<QueryFilter>()
+                    {
+                        new QueryFilter(QueryFilter.FieldOptions.AvailableSlots, "0", QueryFilter.OpOptions.GT)
+                    }
+                };
+                QueryResponse queryResponse = await LobbyService.Instance.QueryLobbiesAsync(queryLobbyOptions);
+
+                OnLobbyListChangedEvent?.Invoke(this, new OnLobbyListChangedEventArgs
+                {
+                    LobbyList = queryResponse.Results
+                });
+            }
+            catch (LobbyServiceException e)
+            {
+                Debug.Log(e);
+            }
+        }
+
+        #endregion
+
+
         #region Handle: Heartbeat
 
         private void HandleHeartbeat()
@@ -228,6 +281,26 @@ namespace Game
                     heartbeatTimer = heartbeatTimerMax;
 
                     LobbyService.Instance.SendHeartbeatPingAsync(_joinedLobby.Id);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Handle: Periodic: List: Lobbies
+
+        private void HandlePeriodicListLobbies()
+        {
+            if (_joinedLobby != null && AuthenticationService.Instance.IsSignedIn)
+            {
+                listLobbiesTimer -= Time.deltaTime;
+
+                if (listLobbiesTimer <= 0f)
+                {
+                    var heartbeatTimerMax = 3f;
+                    listLobbiesTimer = heartbeatTimerMax;
+
+                    ListLobbies();
                 }
             }
         }

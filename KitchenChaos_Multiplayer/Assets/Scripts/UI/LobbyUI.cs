@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using Game;
 using KitchenChaos_Multiplayer.Game;
 using TMPro;
+using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,24 +20,52 @@ namespace UI
         [SerializeField] private TMP_InputField _ifLobbyCode;
         [SerializeField] private TMP_InputField _ifPlayerName;
         [SerializeField] private LobbyCreateUI _lobbyCreateUI;
+        [SerializeField] private Transform _lobbyContainer;
+        [SerializeField] private Transform _lobbyTemplate;
 
         #endregion
 
-        
+
         #region Unity: Awake | Start | Update
 
         private void Awake()
         {
-            AddEvents();
+            _lobbyTemplate.gameObject.SetActive(false);
         }
 
         private void Start()
         {
+            AddEvents();
+
             _ifPlayerName.text = KitchenGameMultiplayer.Instance.GetPlayerName();
+
+            UpdateLobbyList(new List<Lobby>());
         }
 
         private void OnDestroy()
         {
+            RemoveEvents();
+        }
+
+        #endregion
+
+
+        #region Update: Lobby: List
+
+        private void UpdateLobbyList(List<Lobby> lobbyList)
+        {
+            foreach (Transform child in _lobbyContainer)
+            {
+                if (child == _lobbyTemplate) continue;
+                Destroy(child.gameObject);
+            }
+
+            foreach (var lobby in lobbyList)
+            {
+                var lobbyTransform = Instantiate(_lobbyTemplate, _lobbyContainer);
+                lobbyTransform.gameObject.SetActive(true);
+                lobbyTransform.GetComponent<LobbyListSingleUI>().SetLobby(lobby);
+            }
         }
 
         #endregion
@@ -58,7 +88,7 @@ namespace UI
         }
 
         #endregion
-        
+
         #region Event: OnBtnJoinCodeClicked
 
         private void OnBtnJoinCodeClicked()
@@ -87,6 +117,15 @@ namespace UI
 
         #endregion
 
+        #region Event: OnLobbyListChanged
+
+        private void OnLobbyListChanged(object sender, OnLobbyListChangedEventArgs e)
+        {
+            UpdateLobbyList(e.LobbyList);
+        }
+
+        #endregion
+
         #region Events: Add | Remove
 
         private void AddEvents()
@@ -97,6 +136,8 @@ namespace UI
             _btnJoinCode.onClick.AddListener(OnBtnJoinCodeClicked);
 
             _ifPlayerName.onValueChanged.AddListener(OnPlayerNameChanged);
+
+            KitchenGameLobby.Instance.OnLobbyListChangedEvent += OnLobbyListChanged;
         }
 
         private void RemoveEvents()
@@ -105,8 +146,10 @@ namespace UI
             _btnMainMenu.onClick.RemoveListener(OnBtnMainMenuClicked);
             _btnQuickJoin.onClick.RemoveListener(OnBtnQuickJoinClicked);
             _btnJoinCode.onClick.RemoveListener(OnBtnJoinCodeClicked);
-            
+
             _ifPlayerName.onValueChanged.RemoveListener(OnPlayerNameChanged);
+
+            KitchenGameLobby.Instance.OnLobbyListChangedEvent -= OnLobbyListChanged;
         }
 
         #endregion
